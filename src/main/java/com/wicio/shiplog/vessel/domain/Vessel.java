@@ -1,0 +1,2 @@
+package com.wicio.shiplog.vessel.domain;public class Vessel {
+}
