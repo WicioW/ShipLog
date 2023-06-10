@@ -5,21 +5,19 @@ import com.wicio.shiplog.log.domain.Log;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
+import java.time.Instant;
+import lombok.Builder;
 import lombok.Getter;
 
-import java.time.Instant;
-
+@Builder
 @Getter
 @Entity
-public class Vessel extends EntitySuperclass{
+public class Vessel extends EntitySuperclass {
 
-    @Column(nullable = false)
-    private String name;
+  @Column(nullable = false)
+  private String name;
 
-    private Instant productionDate;
+  private Instant productionDate;
 
-    @OneToOne
-    private Log lastLog;
-
-
+  @OneToOne private Log lastLog;
 }
