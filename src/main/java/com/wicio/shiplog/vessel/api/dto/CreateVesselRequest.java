@@ -1,2 +1,6 @@
-package com.wicio.shiplog.vessel.api.dto;public class CreateVesselRequest {
+package com.wicio.shiplog.vessel.api.dto;
+
+
+public class CreateVesselRequest {
+
 }

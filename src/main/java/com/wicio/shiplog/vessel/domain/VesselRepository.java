@@ -1,2 +1,8 @@
-package com.wicio.shiplog.vessel.domain;public class VesselRepository {
+package com.wicio.shiplog.vessel.domain;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface VesselRepository extends JpaRepository<Vessel, Long> {
 }
