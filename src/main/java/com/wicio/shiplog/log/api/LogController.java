@@ -1,2 +1,3 @@
-package com.wicio.shiplog.log.api;public class LogController {
-}
+package com.wicio.shiplog.log.api;
+
+public class LogController {}

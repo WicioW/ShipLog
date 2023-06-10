@@ -1,2 +1,3 @@
-package com.wicio.shiplog.vessel.application.usecase;public class VesselCreator {
-}
+package com.wicio.shiplog.vessel.application.usecase;
+
+public class VesselCreator {}

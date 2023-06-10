@@ -1,2 +1,3 @@
-package com.wicio.shiplog.log.application.usecase;public class LogFinder {
-}
+package com.wicio.shiplog.log.application.usecase;
+
+public class LogFinder {}
