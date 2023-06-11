@@ -197,7 +197,8 @@ public class RoutesCreator {
       coordinateStartingPoints = new ArrayList<>(Arrays.asList(COORDINATES_LIST));
     }
     String startingPoint =
-        coordinateStartingPoints.get(randomIntBetween(0, coordinateStartingPoints.size() - 1));
+        coordinateStartingPoints.get(
+            randomNumberGenerator.randomIntBetween(0, coordinateStartingPoints.size() - 1));
     coordinateStartingPoints.remove(startingPoint);
     return startingPoint.replace(" ", "")
         .split(",");
