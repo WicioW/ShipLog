@@ -8,6 +8,7 @@ import jakarta.persistence.OneToOne;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 @Builder
 @Getter
@@ -19,5 +20,12 @@ public class Vessel extends EntitySuperclass {
 
   private Instant productionDate;
 
-  @OneToOne private Log lastLog;
+  @OneToOne
+  private Log lastLog;
+
+  public void updateLastLog(Log log) {
+    Assert.notNull(log, "Log cannot be null");
+    Assert.isTrue(log.getVessel() == this, "Log must be for this vessel");
+    this.lastLog = log;
+  }
 }
