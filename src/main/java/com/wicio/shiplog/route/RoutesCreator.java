@@ -1,6 +1,5 @@
 package com.wicio.shiplog.route;
 
-import static com.wicio.shiplog.route.util.RouteInitialPoint.COORDINATES_LIST;
 import static java.lang.Math.PI;
 import static java.lang.Math.asin;
 import static java.lang.Math.atan2;
@@ -11,16 +10,14 @@ import static java.lang.Math.toRadians;
 
 import com.wicio.shiplog.log.api.dto.CreateLogRequest;
 import com.wicio.shiplog.log.application.usecase.LogCreator;
+import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.log.domain.Log;
-import com.wicio.shiplog.log.domain.LogRepository;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +31,6 @@ public class RoutesCreator {
 
   private final LogCreator logCreator;
   private final VesselRepository vesselRepository;
-  private final LogRepository logRepository;
   private final TimeDifferenceCalculator timeDifferenceCalculator;
   private final RandomNumberGenerator randomNumberGenerator;
   private final DistanceCalculatorBasedOnSpeedAndTime distanceCalculatorBasedOnSpeedAndTime;
@@ -48,8 +44,8 @@ public class RoutesCreator {
   private static final Double[] SPEED_OVER_GROUND_RANGE = {0d, 20d};
 
   private static final double MAXIMAL_SPEED_OVER_GROUND_CHANGE_PER_HOUR = 20;
-  // To prevent ships from going in circles -> go left
-  private static final Double[] IMPOSED_SHIP_COURSE_RANGE = {180d, 360d};
+//  // To prevent ships from going in circles -> go left
+//  private static final Double[] IMPOSED_SHIP_COURSE_RANGE = {180d, 360d};
 
   private static final Double STARTING_DIRECTION = 270d;
   private static final Double ONE_MONTH_IN_MINUTES = 44640d;
@@ -77,7 +73,7 @@ public class RoutesCreator {
                 lastLog.getSpeedOverGroundInKmPerHour(),
                 lastTimeStamp);
 
-        Double newCog =
+        Degree newCog =
             generateDirection(
                 timeStamp,
                 lastLog.getCourseOverGround(),
@@ -100,7 +96,7 @@ public class RoutesCreator {
                     .YCoordinate(newCoords[0])
                     .XCoordinate(newCoords[1])
                     .speedOverGround(newSog)
-                    .courseOverGround(newCog)
+                    .courseOverGround(newCog.getValue())
                     .windDirection(generateDirection(
                         timeStamp,
                         lastLog.getWindDirection(),
@@ -118,20 +114,6 @@ public class RoutesCreator {
       }
     }
   }
-
-//  private double distanceInMetresFromSpeedAndTime(
-//      Double speedOverGroundInKmPerH,
-//      Instant currentTimeStamp,
-//      Instant previousTimeStamp) {
-//    log.debug("speed in km/h:" + speedOverGroundInKmPerH);
-//
-//    Double speedMetersPerMin = speedOverGroundInKmPerH * (1000d / 60d);
-//    log.debug("speed in met/min:" + speedMetersPerMin);
-//    long minutesBetween = timeDifferenceCalculator.minutesBetween(currentTimeStamp,
-//        previousTimeStamp);
-//    log.debug("distance in metres:" + (speedMetersPerMin * minutesBetween));
-//    return speedMetersPerMin * minutesBetween;
-//  }
 
   /**
    * latitude, longitude - entry point coordinates distanceInMetres - distance that you want to move
@@ -188,19 +170,20 @@ public class RoutesCreator {
     return gaussian;
   }
 
-  private List<String> coordinateStartingPoints = new ArrayList<>();
+//  private List<String> coordinateStartingPoints = new ArrayList<>();
 
-  private String[] randomStartCoordinates() {
-    if (coordinateStartingPoints == null || coordinateStartingPoints.isEmpty()) {
-      coordinateStartingPoints = new ArrayList<>(Arrays.asList(COORDINATES_LIST));
-    }
-    String startingPoint =
-        coordinateStartingPoints.get(
-            randomNumberGenerator.randomIntBetween(0, coordinateStartingPoints.size() - 1));
-    coordinateStartingPoints.remove(startingPoint);
-    return startingPoint.replace(" ", "")
-        .split(",");
-  }
+//  private String[] randomStartCoordinates() {
+//    if (coordinateStartingPoints == null || coordinateStartingPoints.isEmpty()) {
+//      coordinateStartingPoints = new ArrayList<>(Arrays.asList(COORDINATES_LIST));
+//    }
+//    String startingPoint =
+//        coordinateStartingPoints.get(
+//            randomNumberGenerator.randomIntBetween(0, coordinateStartingPoints.size() - 1));
+//    coordinateStartingPoints.remove(startingPoint);
+//    return startingPoint
+//        .replace(" ", "")
+//        .split(",");
+//  }
 
   private Log createInitialLogForVessel(Vessel vessel,
                                         Instant currentTimeStamp) {
@@ -246,78 +229,78 @@ public class RoutesCreator {
       return directionWithinNormalizedBounds(direction);
     }
   */
-  private Double generateDirection(
-      Instant currentTimeStamp,
-      Double lastDirection,
-      Instant lastTimeStamp) {
-    if (lastDirection == null) {
-      return randomNumberGenerator.randomDoubleBetween(IMPOSED_SHIP_COURSE_RANGE[0],
-          IMPOSED_SHIP_COURSE_RANGE[1]);
-    }
-    long minutesPassed = timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp);
-    Double[] range = rangeForImposedCourseRange(minutesPassed, lastDirection);
-    log.debug("range:" + range[0] + " " + range[1]);
-    Double direction = randomNumberGenerator.randomDoubleBetween(range[0], range[1]);
-    log.debug("generated direction:" + direction);
-    return direction;
-  }
-
-  private static Double[] rangeForImposedCourseRange(long minutesPassed,
-                                                     double lastDirection) {
-    long possibleTurnRange = minutesPassed;
-    if (possibleTurnRange >= IMPOSED_SHIP_COURSE_RANGE[1] - IMPOSED_SHIP_COURSE_RANGE[0]) {
-      return new Double[]{IMPOSED_SHIP_COURSE_RANGE[0], IMPOSED_SHIP_COURSE_RANGE[1]};
-    }
-    Double max;
-    Double min;
-    // górna granica
-    if (lastDirection + (possibleTurnRange) / 2 > IMPOSED_SHIP_COURSE_RANGE[1]) {
-      max = IMPOSED_SHIP_COURSE_RANGE[1];
-      min = IMPOSED_SHIP_COURSE_RANGE[1] - possibleTurnRange;
-      return new Double[]{min, max};
-    }
-    // dolna granica
-    if (lastDirection - (possibleTurnRange / 2) < IMPOSED_SHIP_COURSE_RANGE[0]) {
-      min = IMPOSED_SHIP_COURSE_RANGE[0];
-      max = IMPOSED_SHIP_COURSE_RANGE[0] + possibleTurnRange;
-      return new Double[]{min, max};
-    }
-
-    min = lastDirection - (possibleTurnRange / 2);
-    max = lastDirection + (possibleTurnRange / 2);
-
-    return new Double[]{min, max};
-  }
+//  private Double generateDirection(
+//      Instant currentTimeStamp,
+//      Double lastDirection,
+//      Instant lastTimeStamp) {
+//    if (lastDirection == null) {
+//      return randomNumberGenerator.randomDoubleBetween(IMPOSED_SHIP_COURSE_RANGE[0],
+//          IMPOSED_SHIP_COURSE_RANGE[1]);
+//    }
+//    long minutesPassed = timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp);
+//    Double[] range = rangeForImposedCourseRange(minutesPassed, lastDirection);
+//    log.debug("range:" + range[0] + " " + range[1]);
+//    Double direction = randomNumberGenerator.randomDoubleBetween(range[0], range[1]);
+//    log.debug("generated direction:" + direction);
+//    return direction;
+//  }
+//
+//  private static Double[] rangeForImposedCourseRange(long minutesPassed,
+//                                                     double lastDirection) {
+//    long possibleTurnRange = minutesPassed;
+//    if (possibleTurnRange >= IMPOSED_SHIP_COURSE_RANGE[1] - IMPOSED_SHIP_COURSE_RANGE[0]) {
+//      return new Double[]{IMPOSED_SHIP_COURSE_RANGE[0], IMPOSED_SHIP_COURSE_RANGE[1]};
+//    }
+//    Double max;
+//    Double min;
+//    // górna granica
+//    if (lastDirection + (possibleTurnRange) / 2 > IMPOSED_SHIP_COURSE_RANGE[1]) {
+//      max = IMPOSED_SHIP_COURSE_RANGE[1];
+//      min = IMPOSED_SHIP_COURSE_RANGE[1] - possibleTurnRange;
+//      return new Double[]{min, max};
+//    }
+//    // dolna granica
+//    if (lastDirection - (possibleTurnRange / 2) < IMPOSED_SHIP_COURSE_RANGE[0]) {
+//      min = IMPOSED_SHIP_COURSE_RANGE[0];
+//      max = IMPOSED_SHIP_COURSE_RANGE[0] + possibleTurnRange;
+//      return new Double[]{min, max};
+//    }
+//
+//    min = lastDirection - (possibleTurnRange / 2);
+//    max = lastDirection + (possibleTurnRange / 2);
+//
+//    return new Double[]{min, max};
+//  }
 
   // added to prevent vessels from going in circles
-  private Double directionWithinVesselCourseRange(Double direction) {
-    if (direction < IMPOSED_SHIP_COURSE_RANGE[0]) {
-      return IMPOSED_SHIP_COURSE_RANGE[0];
-    }
-    if (direction > IMPOSED_SHIP_COURSE_RANGE[1]) {
-      return IMPOSED_SHIP_COURSE_RANGE[1];
-    }
-    return direction;
-  }
+//  private Double directionWithinVesselCourseRange(Double direction) {
+//    if (direction < IMPOSED_SHIP_COURSE_RANGE[0]) {
+//      return IMPOSED_SHIP_COURSE_RANGE[0];
+//    }
+//    if (direction > IMPOSED_SHIP_COURSE_RANGE[1]) {
+//      return IMPOSED_SHIP_COURSE_RANGE[1];
+//    }
+//    return direction;
+//  }
 
-  private Double directionWithinNormalizedBounds(Double direction) {
-    while (direction < 0) {
-      direction += 360;
-    }
-    while (direction > 360) {
-      direction -= 360;
-    }
-    return direction;
-  }
+//  private Double directionWithinNormalizedBounds(Double direction) {
+//    while (direction < 0) {
+//      direction += 360;
+//    }
+//    while (direction > 360) {
+//      direction -= 360;
+//    }
+//    return direction;
+//  }
 
-  /**
-   * range is not between 0 and 360. Meaning values can be smaller than 0 and bigger than 360.
-   */
-  private Double[] directionRangeForTimeDifference(Double lastDirection,
-                                                   long minutes) {
-    Double radius = (double) minutes;
-    return new Double[]{lastDirection - radius, lastDirection + radius};
-  }
+//  /**
+//   * range is not between 0 and 360. Meaning values can be smaller than 0 and bigger than 360.
+//   */
+//  private Double[] directionRangeForTimeDifference(Double lastDirection,
+//                                                   long minutes) {
+//    Double radius = (double) minutes;
+//    return new Double[]{lastDirection - radius, lastDirection + radius};
+//  }
 
   private Double generateWindSpeed(
       Instant currentTimeStamp,

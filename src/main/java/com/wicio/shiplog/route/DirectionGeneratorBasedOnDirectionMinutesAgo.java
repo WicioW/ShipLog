@@ -1,71 +1,68 @@
 package com.wicio.shiplog.route;
 
+import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
+import com.wicio.shiplog.route.util.vo.DegreeRangeVO;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class DirectionGeneratorBasedOnDirectionMinutesAgo {
 
   private final RandomNumberGenerator randomNumberGenerator;
 
-  // To prevent ships from going in circles -> go left
-  private static final Double[] IMPOSED_SHIP_COURSE_RANGE = {180d, 360d};
-
-  public Double generateDirection(
+  public Degree generateDirection(
       Instant currentTimeStamp,
-      Double lastDirection,
+      Integer lastDirection,
       Instant lastTimeStamp,
       long minutesAgo) {
+    int returnValue;
     if (lastDirection == null) {
-      return randomNumberGenerator.randomDoubleBetween(IMPOSED_SHIP_COURSE_RANGE[0],
-          IMPOSED_SHIP_COURSE_RANGE[1]);
+      returnValue = randomNumberGenerator.randomIntBetween(0, 360);
+    } else {
+      DegreeRangeVO range = rangeForImposedCourseRange(minutesAgo, lastDirection);
+      returnValue = randomNumberGenerator.randomIntBetween(range.min()
+          .getValue(), range.max()
+          .getValue());
     }
-//    long minutesPassed = timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp);
-    Double[] range = rangeForImposedCourseRange(minutesAgo, lastDirection);
-    log.debug("range:" + range[0] + " " + range[1]);
-    Double direction = randomNumberGenerator.randomDoubleBetween(range[0], range[1]);
-    log.debug("generated direction:" + direction);
-    return direction;
-  }
-
-  private Double[] rangeForImposedCourseRange(long minutesPassed,
-                                              double lastDirection) {
-    long possibleTurnRange = minutesPassed;
-    if (possibleTurnRange >= IMPOSED_SHIP_COURSE_RANGE[1] - IMPOSED_SHIP_COURSE_RANGE[0]) {
-      return new Double[]{IMPOSED_SHIP_COURSE_RANGE[0], IMPOSED_SHIP_COURSE_RANGE[1]};
-    }
-    Double max;
-    Double min;
-    // górna granica
-    if (lastDirection + (possibleTurnRange) / 2 > IMPOSED_SHIP_COURSE_RANGE[1]) {
-      max = IMPOSED_SHIP_COURSE_RANGE[1];
-      min = IMPOSED_SHIP_COURSE_RANGE[1] - possibleTurnRange;
-      return new Double[]{min, max};
-    }
-    // dolna granica
-    if (lastDirection - (possibleTurnRange / 2) < IMPOSED_SHIP_COURSE_RANGE[0]) {
-      min = IMPOSED_SHIP_COURSE_RANGE[0];
-      max = IMPOSED_SHIP_COURSE_RANGE[0] + possibleTurnRange;
-      return new Double[]{min, max};
-    }
-
-    min = lastDirection - (possibleTurnRange / 2);
-    max = lastDirection + (possibleTurnRange / 2);
-
-    return new Double[]{min, max};
+    return letsMakeCogOnlyOnTheLeftSide(new Degree(returnValue));
   }
 
   /**
-   * range is not between 0 and 360. Meaning values can be smaller than 0 and bigger than 360.
+   * To prevent ships from going in circles -> go left
    */
-  private Double[] directionRangeForTimeDifference(Double lastDirection,
-                                                   long minutes) {
-    Double radius = (double) minutes;
-    return new Double[]{lastDirection - radius, lastDirection + radius};
+  private Degree letsMakeCogOnlyOnTheLeftSide(Degree courseOverGround) {
+    int cog = courseOverGround.getValue();
+    if (cog > 180) {
+      cog = cog - 180;
+    } else {
+      cog = cog + 180;
+    }
+    return new Degree(cog);
   }
+
+  private DegreeRangeVO rangeForImposedCourseRange(long minutesPassed,
+                                                   int lastDirection) {
+    int possibleTurnValue = possibleVesselTurnValue(minutesPassed);
+
+    return new DegreeRangeVO(
+        new Degree(lastDirection - possibleTurnValue),
+        new Degree(lastDirection + possibleTurnValue));
+  }
+
+  // arbitrary method of calculating turn value over time
+  private int possibleVesselTurnValue(long minutesPassed) {
+    return (int) (minutesPassed / 2);
+  }
+
+//  /**
+//   * range is not between 0 and 360. Meaning values can be smaller than 0 and bigger than 360.
+//   */
+//  private Double[] directionRangeForTimeDifference(Double lastDirection,
+//                                                   long minutes) {
+//    Double radius = (double) minutes;
+//    return new Double[]{lastDirection - radius, lastDirection + radius};
+//  }
 }

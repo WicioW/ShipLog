@@ -27,9 +27,10 @@ public class Log extends EntitySuperclass {
   private Double speedOverGroundInKmPerHour;
   @Nullable
   @Embedded
-  private CourseOverGround courseOverGround;
+  private Degree courseOverGround;
   @Nullable
-  private Double windDirection;
+  @Embedded
+  private Degree windDirection;
   @Nullable
   private Double windSpeedInKmPerHour;
   @Builder.Default

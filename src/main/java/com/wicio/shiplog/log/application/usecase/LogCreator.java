@@ -1,7 +1,7 @@
 package com.wicio.shiplog.log.application.usecase;
 
 import com.wicio.shiplog.log.api.dto.CreateLogRequest;
-import com.wicio.shiplog.log.domain.CourseOverGround;
+import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.log.domain.Log;
 import com.wicio.shiplog.log.domain.LogRepository;
 import com.wicio.shiplog.vessel.application.usecase.VesselUpdater;
@@ -27,7 +27,7 @@ public class LogCreator {
             .vessel(vessel)
             .point(point)
             .speedOverGroundInKmPerHour(createLogRequest.speedOverGround())
-            .courseOverGround(new CourseOverGround(createLogRequest.courseOverGround()))
+            .courseOverGround(new Degree(createLogRequest.courseOverGround()))
             .windDirection(createLogRequest.windDirection())
             .windSpeedInKmPerHour(createLogRequest.windSpeed())
             .isStationary(createLogRequest.stationary())
