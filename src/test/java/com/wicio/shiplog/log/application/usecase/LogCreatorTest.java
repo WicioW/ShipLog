@@ -23,19 +23,22 @@ class LogCreatorTest {
 
   EasyRandom easyRandom = new EasyRandom();
 
-  @Mock private LogRepository logRepository;
+  @Mock
+  private LogRepository logRepository;
   @Mock
   private PointCreator pointCreator;
   @Mock
   private VesselUpdater vesselUpdater;
 
-  @InjectMocks private LogCreator testObj;
+  @InjectMocks
+  private LogCreator testObj;
 
   @Test
   void shouldCreateLog() {
     // given
     CreateLogRequest createLogRequest = easyRandom.nextObject(CreateLogRequest.class);
-    Vessel vessel = Vessel.builder().build();
+    Vessel vessel = Vessel.builder()
+        .build();
     Point point = generateRandomPoint();
     when(pointCreator.apply(createLogRequest.XCoordinate(), createLogRequest.YCoordinate()))
         .thenReturn(point);
@@ -53,6 +56,7 @@ class LogCreatorTest {
     assertThat(result.getCourseOverGround()).isEqualTo(createLogRequest.courseOverGround());
     assertThat(result.getWindDirection()).isEqualTo(createLogRequest.windDirection());
     assertThat(result.getWindSpeedInKmPerHour()).isEqualTo(createLogRequest.windSpeed());
-    assertThat(result.isStationary()).isEqualTo(createLogRequest.stationary().booleanValue());
+    assertThat(result.isStationary()).isEqualTo(createLogRequest.stationary()
+        .booleanValue());
   }
 }
