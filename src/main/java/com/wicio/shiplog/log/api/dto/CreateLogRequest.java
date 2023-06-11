@@ -7,7 +7,7 @@ public record CreateLogRequest(
     Double YCoordinate,
     Double XCoordinate,
     Double speedOverGround,
-    Double courseOverGround,
+    Integer courseOverGround,
     Double windDirection,
     Double windSpeed,
     Boolean stationary) {

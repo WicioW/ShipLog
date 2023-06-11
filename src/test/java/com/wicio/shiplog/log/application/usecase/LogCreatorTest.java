@@ -53,10 +53,22 @@ class LogCreatorTest {
     assertThat(result.getPoint()).isEqualTo(point);
     assertThat(result.getSpeedOverGroundInKmPerHour())
         .isEqualTo(createLogRequest.speedOverGround());
-    assertThat(result.getCourseOverGround()).isEqualTo(createLogRequest.courseOverGround());
+    assertThat(result.getCourseOverGround()
+        .getValue()).isEqualTo(normalizeIntToDegreesBounds(createLogRequest.courseOverGround()));
     assertThat(result.getWindDirection()).isEqualTo(createLogRequest.windDirection());
     assertThat(result.getWindSpeedInKmPerHour()).isEqualTo(createLogRequest.windSpeed());
     assertThat(result.isStationary()).isEqualTo(createLogRequest.stationary()
         .booleanValue());
   }
+
+  private int normalizeIntToDegreesBounds(int value) {
+    while (value < 0) {
+      value += 360;
+    }
+    while (value > 360) {
+      value -= 360;
+    }
+    return value;
+  }
+
 }
