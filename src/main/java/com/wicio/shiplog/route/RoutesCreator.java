@@ -37,6 +37,7 @@ public class RoutesCreator {
   private final LogRepository logRepository;
   private final TimeDifferenceCalculator timeDifferenceCalculator;
   private final RandomNumberGenerator randomNumberGenerator;
+  private final DistanceCalculatorBasedOnSpeedAndTime distanceCalculatorBasedOnSpeedAndTime;
 
   private static final Double[] WIND_SPEED_RANGE = {0d, 40d};
 
@@ -88,7 +89,9 @@ public class RoutesCreator {
                     .getY(),
                 lastLog.getPoint()
                     .getX(),
-                distanceInMetresFromSpeedAndTime(newSog, timeStamp, lastTimeStamp),
+                distanceCalculatorBasedOnSpeedAndTime.distanceInMetres(newSog,
+                    timeDifferenceCalculator.minutesBetween(timeStamp,
+                        lastTimeStamp)),
                 newCog);
         newLog =
             logCreator.apply(
@@ -110,30 +113,25 @@ public class RoutesCreator {
                     .build()
             );
 
-        logging(newLog);
+        log.debug("Created " + newLog.toLogString() + " for " + newLog.getVessel()
+            .toLogString());
       }
     }
   }
 
-  private void logging(Log vesselLog) {
-    String info = "Created new Log for Vessel[id:" + vesselLog.getVessel()
-        .getId() + "]";
-    log.debug(info);
-  }
-
-  private double distanceInMetresFromSpeedAndTime(
-      Double speedOverGroundInKmPerH,
-      Instant currentTimeStamp,
-      Instant previousTimeStamp) {
-    log.debug("speed in km/h:" + speedOverGroundInKmPerH);
-
-    Double speedMetersPerMin = speedOverGroundInKmPerH * (1000d / 60d);
-    log.debug("speed in met/min:" + speedMetersPerMin);
-    long minutesBetween = timeDifferenceCalculator.minutesBetween(currentTimeStamp,
-        previousTimeStamp);
-    log.debug("distance in metres:" + (speedMetersPerMin * minutesBetween));
-    return speedMetersPerMin * minutesBetween;
-  }
+//  private double distanceInMetresFromSpeedAndTime(
+//      Double speedOverGroundInKmPerH,
+//      Instant currentTimeStamp,
+//      Instant previousTimeStamp) {
+//    log.debug("speed in km/h:" + speedOverGroundInKmPerH);
+//
+//    Double speedMetersPerMin = speedOverGroundInKmPerH * (1000d / 60d);
+//    log.debug("speed in met/min:" + speedMetersPerMin);
+//    long minutesBetween = timeDifferenceCalculator.minutesBetween(currentTimeStamp,
+//        previousTimeStamp);
+//    log.debug("distance in metres:" + (speedMetersPerMin * minutesBetween));
+//    return speedMetersPerMin * minutesBetween;
+//  }
 
   /**
    * latitude, longitude - entry point coordinates distanceInMetres - distance that you want to move
