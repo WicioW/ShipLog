@@ -13,6 +13,7 @@ import com.wicio.shiplog.log.api.dto.CreateLogRequest;
 import com.wicio.shiplog.log.application.usecase.LogCreator;
 import com.wicio.shiplog.log.domain.Log;
 import com.wicio.shiplog.log.domain.LogRepository;
+import com.wicio.shiplog.route.util.RandomNumberGenerator;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;
@@ -35,6 +36,7 @@ public class RoutesCreator {
   private final VesselRepository vesselRepository;
   private final LogRepository logRepository;
   private final TimeDifferenceCalculator timeDifferenceCalculator;
+  private final RandomNumberGenerator randomNumberGenerator;
 
   private static final Double[] WIND_SPEED_RANGE = {0d, 40d};
 
@@ -140,7 +142,10 @@ public class RoutesCreator {
    * earthRadiusInMetres - Earth radius in metres.
    */
   private Double[] coordinatesFromStartPointAndDistanceAndBearing(
-      double latitude, double longitude, double distanceInMetres, double bearing) {
+      double latitude,
+      double longitude,
+      double distanceInMetres,
+      double bearing) {
     double brngRad = toRadians(bearing);
     double latRad = toRadians(latitude);
     double lonRad = toRadians(longitude);
@@ -163,12 +168,8 @@ public class RoutesCreator {
     return new Double[]{toDegrees(latitudeResult), toDegrees(longitudeResult)};
   }
 
-  private int randomInt(int min, int max) {
-    Random random = new Random();
-    return random.nextInt(max - min + 1) + min;
-  }
-
-  public static double randomGaussian(int min, int max) {
+  public static double randomGaussian(int min,
+                                      int max) {
     log.debug("random gausian");
     log.debug("min:" + min + ", max:" + max);
     int mean = (min + max) / 2;
@@ -189,10 +190,6 @@ public class RoutesCreator {
     return gaussian;
   }
 
-  private double randomDouble(double min, double max) {
-    return randomInt((int) min, (int) max);
-  }
-
   private List<String> coordinateStartingPoints = new ArrayList<>();
 
   private String[] randomStartCoordinates() {
@@ -200,13 +197,14 @@ public class RoutesCreator {
       coordinateStartingPoints = new ArrayList<>(Arrays.asList(COORDINATES_LIST));
     }
     String startingPoint =
-        coordinateStartingPoints.get(randomInt(0, coordinateStartingPoints.size() - 1));
+        coordinateStartingPoints.get(randomIntBetween(0, coordinateStartingPoints.size() - 1));
     coordinateStartingPoints.remove(startingPoint);
     return startingPoint.replace(" ", "")
         .split(",");
   }
 
-  private Log createInitialLogForVessel(Vessel vessel, Instant currentTimeStamp) {
+  private Log createInitialLogForVessel(Vessel vessel,
+                                        Instant currentTimeStamp) {
     String[] coords = randomStartCoordinates();
     log.debug("start point coords:" + coords[0] + ", " + coords[1]);
     Instant lastTimeStamp = currentTimeStamp.minus(2, ChronoUnit.MINUTES);
@@ -214,7 +212,8 @@ public class RoutesCreator {
     Double courseOverGround =
         generateDirection(currentTimeStamp, STARTING_DIRECTION, lastTimeStamp);
     Double windDirection =
-        generateDirection(currentTimeStamp, randomDouble(0d, 360d), lastTimeStamp);
+        generateDirection(currentTimeStamp, randomNumberGenerator.randomDoubleBetween(0d, 360d),
+            lastTimeStamp);
     Double windSpeed = generateWindSpeed(currentTimeStamp, 20d, lastTimeStamp);
     Boolean stationary = false;
 
@@ -249,19 +248,23 @@ public class RoutesCreator {
     }
   */
   private Double generateDirection(
-      Instant currentTimeStamp, Double lastDirection, Instant lastTimeStamp) {
+      Instant currentTimeStamp,
+      Double lastDirection,
+      Instant lastTimeStamp) {
     if (lastDirection == null) {
-      return randomDouble(IMPOSED_SHIP_COURSE_RANGE[0], IMPOSED_SHIP_COURSE_RANGE[1]);
+      return randomNumberGenerator.randomDoubleBetween(IMPOSED_SHIP_COURSE_RANGE[0],
+          IMPOSED_SHIP_COURSE_RANGE[1]);
     }
     long minutesPassed = timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp);
     Double[] range = rangeForImposedCourseRange(minutesPassed, lastDirection);
     log.debug("range:" + range[0] + " " + range[1]);
-    Double direction = randomDouble(range[0], range[1]);
+    Double direction = randomNumberGenerator.randomDoubleBetween(range[0], range[1]);
     log.debug("generated direction:" + direction);
     return direction;
   }
 
-  private static Double[] rangeForImposedCourseRange(long minutesPassed, double lastDirection) {
+  private static Double[] rangeForImposedCourseRange(long minutesPassed,
+                                                     double lastDirection) {
     long possibleTurnRange = minutesPassed;
     if (possibleTurnRange >= IMPOSED_SHIP_COURSE_RANGE[1] - IMPOSED_SHIP_COURSE_RANGE[0]) {
       return new Double[]{IMPOSED_SHIP_COURSE_RANGE[0], IMPOSED_SHIP_COURSE_RANGE[1]};
@@ -311,20 +314,24 @@ public class RoutesCreator {
   /**
    * range is not between 0 and 360. Meaning values can be smaller than 0 and bigger than 360.
    */
-  private Double[] directionRangeForTimeDifference(Double lastDirection, long minutes) {
+  private Double[] directionRangeForTimeDifference(Double lastDirection,
+                                                   long minutes) {
     Double radius = (double) minutes;
     return new Double[]{lastDirection - radius, lastDirection + radius};
   }
 
   private Double generateWindSpeed(
-      Instant currentTimeStamp, Double lastWindSpeed, Instant lastTimeStamp) {
+      Instant currentTimeStamp,
+      Double lastWindSpeed,
+      Instant lastTimeStamp) {
     long minutesPassed = timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp);
     Double[] range = windSpeedRangeForTimeDifference(lastWindSpeed, minutesPassed);
     log.debug("ws min" + range[0] + ", max: " + range[1]);
     return randomGaussian((int) Math.round(range[0]), (int) Math.round(range[1]));
   }
 
-  private Double[] windSpeedRangeForTimeDifference(Double lastWindSpeed, long minutes) {
+  private Double[] windSpeedRangeForTimeDifference(Double lastWindSpeed,
+                                                   long minutes) {
     if (lastWindSpeed == null) {
       return WIND_SPEED_RANGE;
     }
@@ -343,9 +350,12 @@ public class RoutesCreator {
   }
 
   private Double generateSpeedOverGround(
-      Instant currentTimeStamp, Double lastSpeedOverGround, Instant lastTimeStamp) {
+      Instant currentTimeStamp,
+      Double lastSpeedOverGround,
+      Instant lastTimeStamp) {
     if (lastSpeedOverGround == null) {
-      return randomDouble(SPEED_OVER_GROUND_RANGE[0], SPEED_OVER_GROUND_RANGE[1]);
+      return randomNumberGenerator.randomDoubleBetween(SPEED_OVER_GROUND_RANGE[0],
+          SPEED_OVER_GROUND_RANGE[1]);
     }
 
     long minutesPassed = timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp);
@@ -355,7 +365,8 @@ public class RoutesCreator {
     return randomGaussian((int) Math.round(range[0]), (int) Math.round(range[1]));
   }
 
-  private Double[] speedOverGroundRangeForTimeDifference(Double lastSpeedOverGround, long minutes) {
+  private Double[] speedOverGroundRangeForTimeDifference(Double lastSpeedOverGround,
+                                                         long minutes) {
     Double radius = (double) (MAXIMAL_SPEED_OVER_GROUND_CHANGE_PER_HOUR * minutes) / 120;
     Double min =
         (lastSpeedOverGround - radius < SPEED_OVER_GROUND_RANGE[0])
