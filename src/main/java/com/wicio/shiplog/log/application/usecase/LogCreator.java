@@ -28,7 +28,7 @@ public class LogCreator {
             .point(point)
             .speedOverGroundInKmPerHour(createLogRequest.speedOverGround())
             .courseOverGround(new Degree(createLogRequest.courseOverGround()))
-            .windDirection(createLogRequest.windDirection())
+            .windDirection(new Degree(createLogRequest.windDirection()))
             .windSpeedInKmPerHour(createLogRequest.windSpeed())
             .isStationary(createLogRequest.stationary())
             .build();
