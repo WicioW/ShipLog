@@ -34,7 +34,6 @@ public class DirectionGeneratorBasedOnDirectionMinutesAgo {
    */
   private Degree letsMakeDirectionPointOnlyToTheLeftSide(Degree degree) {
     int cog = degree.getValue();
-
     if (cog < 180) {
       cog = cog + 180;
     }
@@ -60,12 +59,4 @@ public class DirectionGeneratorBasedOnDirectionMinutesAgo {
     return Math.min(Math.max(value, 0), 360);
   }
 
-//  /**
-//   * range is not between 0 and 360. Meaning values can be smaller than 0 and bigger than 360.
-//   */
-//  private Double[] directionRangeForTimeDifference(Double lastDirection,
-//                                                   long minutes) {
-//    Double radius = (double) minutes;
-//    return new Double[]{lastDirection - radius, lastDirection + radius};
-//  }
 }
