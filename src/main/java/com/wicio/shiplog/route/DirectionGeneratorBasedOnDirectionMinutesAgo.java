@@ -1,6 +1,7 @@
 package com.wicio.shiplog.route;
 
 import com.wicio.shiplog.log.domain.Degree;
+import com.wicio.shiplog.route.util.ClampToRange;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
 import com.wicio.shiplog.route.util.vo.DegreeRangeVO;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 public class DirectionGeneratorBasedOnDirectionMinutesAgo {
 
   private final RandomNumberGenerator randomNumberGenerator;
+  private final ClampToRange clampToRange;
 
   public Degree generateDirection(
       Degree lastDirection,
@@ -56,7 +58,7 @@ public class DirectionGeneratorBasedOnDirectionMinutesAgo {
   }
 
   private int clampToDegreeRange(int value) {
-    return Math.min(Math.max(value, 0), 360);
+    return clampToRange.clamp(value, 0, 360);
   }
 
 }

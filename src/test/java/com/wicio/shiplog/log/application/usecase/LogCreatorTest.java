@@ -1,5 +1,6 @@
 package com.wicio.shiplog.log.application.usecase;
 
+import static com.wicio.shiplog.util.RandomObjectUtil.getRandomCreateLogRequest;
 import static com.wicio.shiplog.util.RandomPoint.generateRandomPoint;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +37,8 @@ class LogCreatorTest {
   @Test
   void shouldCreateLog() {
     // given
-    CreateLogRequest createLogRequest = easyRandom.nextObject(CreateLogRequest.class);
+    CreateLogRequest createLogRequest = getRandomCreateLogRequest();
+
     Vessel vessel = Vessel.builder()
         .build();
     Point point = generateRandomPoint();
@@ -49,16 +51,23 @@ class LogCreatorTest {
     Log result = testObj.apply(vessel, createLogRequest);
     // then
     verify(vesselUpdater).updateLastLog(vessel, result);
-    assertThat(result.getVessel()).isEqualTo(vessel);
-    assertThat(result.getPoint()).isEqualTo(point);
+    assertThat(result.getVessel())
+        .isEqualTo(vessel);
+    assertThat(result.getPoint())
+        .isEqualTo(point);
     assertThat(result.getSpeedOverGroundInKmPerHour())
         .isEqualTo(createLogRequest.speedOverGround());
     assertThat(result.getCourseOverGround()
-        .getValue()).isEqualTo(normalizeIntToDegreesBounds(createLogRequest.courseOverGround()));
-    assertThat(result.getWindDirection()).isEqualTo(createLogRequest.windDirection());
-    assertThat(result.getWindSpeedInKmPerHour()).isEqualTo(createLogRequest.windSpeed());
-    assertThat(result.isStationary()).isEqualTo(createLogRequest.stationary()
-        .booleanValue());
+        .getValue())
+        .isEqualTo(normalizeIntToDegreesBounds(createLogRequest.courseOverGround()));
+    assertThat(result.getWindDirection()
+        .getValue())
+        .isEqualTo(createLogRequest.windDirection());
+    assertThat(result.getWindSpeedInKmPerHour())
+        .isEqualTo(createLogRequest.windSpeed());
+    assertThat(result.isStationary())
+        .isEqualTo(createLogRequest.stationary()
+            .booleanValue());
   }
 
   private int normalizeIntToDegreesBounds(int value) {

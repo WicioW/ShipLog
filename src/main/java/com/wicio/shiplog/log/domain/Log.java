@@ -24,7 +24,7 @@ public class Log extends EntitySuperclass {
   private Point point;
 
   @Nullable
-  private Double speedOverGroundInKmPerHour;
+  private Integer speedOverGroundInKmPerHour;
   @Nullable
   @Embedded
   private Degree courseOverGround;
@@ -32,7 +32,7 @@ public class Log extends EntitySuperclass {
   @Embedded
   private Degree windDirection;
   @Nullable
-  private Double windSpeedInKmPerHour;
+  private Integer windSpeedInKmPerHour;
   @Builder.Default
   private boolean isStationary = true;
 }

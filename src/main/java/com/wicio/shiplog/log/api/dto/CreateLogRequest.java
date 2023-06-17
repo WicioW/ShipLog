@@ -6,10 +6,10 @@ import lombok.Builder;
 public record CreateLogRequest(
     Double YCoordinate,
     Double XCoordinate,
-    Double speedOverGround,
+    Integer speedOverGround,
     Integer courseOverGround,
     Integer windDirection,
-    Double windSpeed,
+    Integer windSpeed,
     Boolean stationary) {
 
 }

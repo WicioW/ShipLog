@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 public class DistanceCalculatorBasedOnSpeedAndTime {
 
   public double distanceInMetres(
-      Double speedOverGroundInKmPerH,
+      Integer speedOverGroundInKmPerH,
       long minutes
   ) {
     Assert.state(speedOverGroundInKmPerH >= 0, "Speed cannot be negative");
@@ -26,7 +26,7 @@ public class DistanceCalculatorBasedOnSpeedAndTime {
   }
 
   public double distanceInKilometres(
-      Double speedOverGroundInKmPerH,
+      Integer speedOverGroundInKmPerH,
       long hours
   ) {
     Assert.state(speedOverGroundInKmPerH >= 0, "Speed cannot be negative");
