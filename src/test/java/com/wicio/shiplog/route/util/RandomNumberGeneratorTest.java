@@ -1,9 +1,11 @@
 package com.wicio.shiplog.route.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,12 +32,23 @@ class RandomNumberGeneratorTest {
       assertThat(actual).isBetween(min, max);
     }
 
+    @Test
+    void shouldThrowExceptionWhenMinIsGreaterThanMax() {
+      //given
+      int min = 10;
+      int max = 0;
+      //when
+      //then
+      assertThrows(IllegalArgumentException.class, () -> testObj.randomIntBetween(min, max));
+    }
+
     private static Stream<Arguments> randomIntBetween() {
       return Stream.of(
           Arguments.of(0, 10),
           Arguments.of(100, 200),
           Arguments.of(1_000_000, 2_000_000),
-          Arguments.of(0, 2_000_000_000));
+          Arguments.of(0, 2_000_000_000)
+      );
     }
   }
 
@@ -51,6 +64,16 @@ class RandomNumberGeneratorTest {
       double actual = testObj.randomDoubleBetween(min, max);
       //then
       assertThat(actual).isBetween(min, max);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenMinIsGreaterThanMax() {
+      //given
+      double min = 10;
+      double max = 0;
+      //when
+      //then
+      assertThrows(IllegalArgumentException.class, () -> testObj.randomDoubleBetween(min, max));
     }
 
     private static Stream<Arguments> randomDoubleBetween() {
