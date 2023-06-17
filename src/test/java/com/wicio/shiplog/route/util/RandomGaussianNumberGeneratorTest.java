@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 class RandomGaussianNumberGeneratorTest {
 
+  RandomGaussianNumberGenerator testObj = new RandomGaussianNumberGenerator();
+
   @Test
   void testNormalDistribution() {
     int min = 0;
@@ -18,7 +20,7 @@ class RandomGaussianNumberGeneratorTest {
     List<Double> generatedNumbers = new ArrayList<>();
     for (int i = 0; i < sampleSize; i++) {
       generatedNumbers.add(
-          RandomGaussianNumberGenerator
+          testObj
               .normalDistribution(min, max));
     }
 
