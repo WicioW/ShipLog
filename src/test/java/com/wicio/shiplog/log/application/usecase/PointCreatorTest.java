@@ -1,14 +1,17 @@
 package com.wicio.shiplog.log.application.usecase;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Point;
 import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoSettings;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+@MockitoSettings
 class PointCreatorTest {
 
-  @InjectMocks private PointCreator testObj;
+  @InjectMocks
+  private PointCreator testObj;
 
   @Test
   void shouldCreatePointFromXAndYCoordinates() {
