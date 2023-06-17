@@ -24,28 +24,29 @@ class DirectionGeneratorBasedOnDirectionMinutesAgoTest {
 
   @ParameterizedTest
   @MethodSource("provideTestValues")
-  void generatedDirectionShouldBeInRange(int min,
-                                         int max,
+  void generatedDirectionShouldBeInRange(int assertMinValue,
+                                         int assertMaxValue,
+                                         int mockMinValue,
+                                         int mockMaxValue,
                                          Degree lastDirection,
                                          long minutesAgo) {
     //given
-    when(randomNumberGenerator.randomIntBetween(min, max)).thenReturn(
-        new Random().nextInt(min, max));
+    when(randomNumberGenerator.randomIntBetween(mockMinValue, mockMaxValue)).thenReturn(
+        new Random().nextInt(mockMinValue, mockMaxValue));
     //when
     int actual = testObj.generateDirection(lastDirection, minutesAgo)
         .getValue();
     //then
-    assertThat(actual).isBetween(min, max);
+    assertThat(actual).isBetween(assertMinValue, assertMaxValue);
   }
 
   private static Stream<Arguments> provideTestValues() {
     return Stream.of(
-        Arguments.of(0, 360, null, 0),
-        Arguments.of(0, 360, null, 1_000),
-        Arguments.of(0, 360, new Degree(5), 1_000),
-        Arguments.of(265, 275, new Degree(270), 10),
-        Arguments.of(270 - 45, 270 + 45, new Degree(270), 90)
+        Arguments.of(180, 360, 0, 360, null, 0),
+        Arguments.of(180, 360, 0, 360, null, 1_000),
+        Arguments.of(180, 360, 0, 360, new Degree(5), 1_000),
+        Arguments.of(265, 275, 265, 275, new Degree(270), 10),
+        Arguments.of(270 - 45, 270 + 45, 270 - 45, 270 + 45, new Degree(270), 90)
     );
   }
-
 }

@@ -34,9 +34,8 @@ public class DirectionGeneratorBasedOnDirectionMinutesAgo {
    */
   private Degree letsMakeDirectionPointOnlyToTheLeftSide(Degree degree) {
     int cog = degree.getValue();
-    if (cog > 180) {
-      cog = cog - 180;
-    } else {
+
+    if (cog < 180) {
       cog = cog + 180;
     }
     return new Degree(cog);
@@ -45,15 +44,20 @@ public class DirectionGeneratorBasedOnDirectionMinutesAgo {
   private DegreeRangeVO rangeForImposedDirectionRange(long minutesPassed,
                                                       int lastDirection) {
     int possibleTurnValue = possibleVesselTurnValue(minutesPassed);
-
+    int maxValueAfterTime = lastDirection + possibleTurnValue;
+    int minValueAfterTime = lastDirection - possibleTurnValue;
     return new DegreeRangeVO(
-        new Degree(lastDirection - possibleTurnValue),
-        new Degree(lastDirection + possibleTurnValue));
+        new Degree(clampToDegreeRange(minValueAfterTime)),
+        new Degree(clampToDegreeRange(maxValueAfterTime)));
   }
 
   // arbitrary method of calculating turn value over time
   private int possibleVesselTurnValue(long minutesPassed) {
     return (int) (minutesPassed / 2);
+  }
+
+  private int clampToDegreeRange(int value) {
+    return Math.min(Math.max(value, 0), 360);
   }
 
 //  /**
