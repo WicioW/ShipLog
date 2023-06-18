@@ -31,12 +31,8 @@ public class SpeedOverGroundGenerator {
       return randomNumberGenerator.randomIntBetween(SPEED_OVER_GROUND_MIN,
           SPEED_OVER_GROUND_MAX);
     }
-
-//    long minutesAgo = timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp);
-//    log.debug("sog, minutes passed:" + minutesAgo);
     NumberRangeVO range = speedOverGroundRangeForTimeDifference(lastSpeedOverGround, minutesAgo);
-//    log.debug("sog:" + range[0] + " " + range[1]);
-    return (int) randomGaussianNumberGenerator.randomGaussian(
+    return (int) randomGaussianNumberGenerator.normalDistribution(
         (Integer) range.min(),
         (Integer) range.max());
   }
@@ -44,25 +40,11 @@ public class SpeedOverGroundGenerator {
   private NumberRangeVO speedOverGroundRangeForTimeDifference(int lastSpeedOverGround,
                                                               long minutes) {
     int possibleDifferenceRange = getPossibleDifferenceRange(minutes);
-
     int minAfterTime = lastSpeedOverGround - possibleDifferenceRange;
-//    int min =
-//        (minAfterTime < SPEED_OVER_GROUND_MIN)
-//            ? SPEED_OVER_GROUND_MIN
-//            : minAfterTime;
-
     int maxAfterTime = lastSpeedOverGround + possibleDifferenceRange;
-//    int max =
-//        maxAfterTime > SPEED_OVER_GROUND_MAX
-//            ? SPEED_OVER_GROUND_MAX
-//            : maxAfterTime;
-
-//    return new Double[]{min, max};
     return new NumberRangeVO(
         clampToSOGRange(minAfterTime),
         clampToSOGRange(maxAfterTime));
-
-//        min, max);
   }
 
   private int clampToSOGRange(int value) {
