@@ -1,6 +1,7 @@
 package com.wicio.shiplog.route;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -16,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 class SpeedOverGroundGeneratorTest {
 
   @InjectMocks
-  private SpeedOverGroundGenerator testObj;
+  private SpeedGenerator testObj;
 
   @Mock
   private RandomNumberGenerator randomNumberGenerator;
@@ -29,31 +30,46 @@ class SpeedOverGroundGeneratorTest {
   void testGenerateSpeedOverGround() {
     //given
     int lastSOG = 10;
+    int speedRangeMinValue = 0;
+    int speedRangeMaxValue = 20;
+    SpeedGeneratorConfigVO vo = new SpeedGeneratorConfigVO(speedRangeMinValue, speedRangeMaxValue,
+        20);
     when(clampToRange.clamp(anyInt(), anyInt(), anyInt())).thenAnswer(i -> {
-      int argument = (int) i.getArguments()[0];
-      if (argument < 0) {
-        return 0;
+      int argument = (int) i.getArguments()[speedRangeMinValue];
+      if (argument < speedRangeMinValue) {
+        return speedRangeMinValue;
       }
-      if (argument > 20) {
-        return 20;
+      if (argument > speedRangeMaxValue) {
+        return speedRangeMaxValue;
       }
       return argument;
     });
 
-    when(randomGaussianNumberGenerator.normalDistribution(0, 20)).thenReturn(15d);
+    when(randomGaussianNumberGenerator.normalDistribution(speedRangeMinValue,
+        speedRangeMaxValue)).thenReturn(15d);
     //when
-    int result = testObj.generateSpeedOverGround(lastSOG, 60);
+    int result = testObj.generateSpeedOverGround(vo, lastSOG, 60);
     //then
-    assertThat(result).isBetween(0, 20);
+    assertThat(result).isBetween(speedRangeMinValue, speedRangeMaxValue);
   }
 
   @Test
   void shouldGenerateSOGWhenLastSOGisNull() {
     //given
+    SpeedGeneratorConfigVO vo = new SpeedGeneratorConfigVO(0, 20, 10);
     when(randomNumberGenerator.randomIntBetween(0, 20)).thenReturn(10);
     //when
-    int result = testObj.generateSpeedOverGround(null, 60);
+    int result = testObj.generateSpeedOverGround(vo, null, 60);
     //then
     assertThat(result).isBetween(0, 20);
+  }
+
+  @Test
+  void shouldThrowExceptionWhenSpeedGeneratorConfigVOisNull() {
+    //given
+    SpeedGeneratorConfigVO vo = null;
+    //when
+    //then
+    assertThrows(IllegalArgumentException.class, () -> testObj.generateSpeedOverGround(vo, 10, 60));
   }
 }
