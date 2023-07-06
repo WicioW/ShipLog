@@ -3,7 +3,7 @@ package com.wicio.shiplog.route;
 import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.route.util.ClampToRange;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
-import com.wicio.shiplog.route.util.vo.DegreeRangeVO;
+import com.wicio.shiplog.route.util.dto.DegreeRangeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class DirectionGeneratorBasedOnDirectionMinutesAgo {
     if (lastDirection == null) {
       returnValue = randomNumberGenerator.randomIntBetween(0, 360);
     } else {
-      DegreeRangeVO range = rangeForImposedDirectionRange(minutesAgo, lastDirection.getValue());
+      DegreeRangeDTO range = rangeForImposedDirectionRange(minutesAgo, lastDirection.getValue());
       returnValue = randomNumberGenerator.randomIntBetween(
           range.min()
               .getValue(),
@@ -42,12 +42,12 @@ public class DirectionGeneratorBasedOnDirectionMinutesAgo {
     return new Degree(cog);
   }
 
-  private DegreeRangeVO rangeForImposedDirectionRange(long minutesPassed,
-                                                      int lastDirection) {
+  private DegreeRangeDTO rangeForImposedDirectionRange(long minutesPassed,
+                                                       int lastDirection) {
     int possibleTurnValue = possibleVesselTurnValue(minutesPassed);
     int maxValueAfterTime = lastDirection + possibleTurnValue;
     int minValueAfterTime = lastDirection - possibleTurnValue;
-    return new DegreeRangeVO(
+    return new DegreeRangeDTO(
         new Degree(clampToDegreeRange(minValueAfterTime)),
         new Degree(clampToDegreeRange(maxValueAfterTime)));
   }

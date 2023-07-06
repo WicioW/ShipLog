@@ -3,7 +3,7 @@ package com.wicio.shiplog.route;
 import com.wicio.shiplog.route.util.ClampToRange;
 import com.wicio.shiplog.route.util.RandomGaussianNumberGenerator;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
-import com.wicio.shiplog.route.util.vo.NumberRangeVO;
+import com.wicio.shiplog.route.util.dto.NumberRangeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -30,7 +30,7 @@ public class SpeedGenerator {
           speedGeneratorConfigVO.speedRangeMinValue(),
           speedGeneratorConfigVO.speedRangeMaxValue());
     }
-    NumberRangeVO range = speedOverGroundRangeForTimeDifference(
+    NumberRangeDTO range = speedOverGroundRangeForTimeDifference(
         speedGeneratorConfigVO,
         lastSpeedOverGround,
         minutesAgo);
@@ -39,14 +39,14 @@ public class SpeedGenerator {
         (Integer) range.max());
   }
 
-  private NumberRangeVO speedOverGroundRangeForTimeDifference(
+  private NumberRangeDTO speedOverGroundRangeForTimeDifference(
       SpeedGeneratorConfigVO speedGeneratorConfigVO,
       int lastSpeedOverGround,
       long minutes) {
     int possibleDifferenceRange = getPossibleDifferenceRange(minutes, speedGeneratorConfigVO);
     int minAfterTime = lastSpeedOverGround - possibleDifferenceRange;
     int maxAfterTime = lastSpeedOverGround + possibleDifferenceRange;
-    return new NumberRangeVO(
+    return new NumberRangeDTO(
         clampToSOGRange(minAfterTime, speedGeneratorConfigVO),
         clampToSOGRange(maxAfterTime, speedGeneratorConfigVO));
   }

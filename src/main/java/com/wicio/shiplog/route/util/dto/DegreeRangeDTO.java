@@ -1,8 +1,8 @@
-package com.wicio.shiplog.route.util.vo;
+package com.wicio.shiplog.route.util.dto;
 
 import com.wicio.shiplog.log.domain.Degree;
 
-public record DegreeRangeVO(
+public record DegreeRangeDTO(
     Degree min,
     Degree max
 ) {
