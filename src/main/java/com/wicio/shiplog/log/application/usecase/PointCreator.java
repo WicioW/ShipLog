@@ -10,7 +10,8 @@ public class PointCreator {
 
   private final GeometryFactory geometryFactory = new GeometryFactory();
 
-  public Point apply(double xCoordinate, double yCoordinate) {
+  public Point apply(double xCoordinate,
+                     double yCoordinate) {
     return geometryFactory.createPoint(new Coordinate(xCoordinate, yCoordinate));
   }
 }

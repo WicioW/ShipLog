@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SubsequentLogsForVesselsCreator {
+class SubsequentLogsForVesselsCreator {
 
   private final LogCreator logCreator;
   private final VesselRepository vesselRepository;
@@ -25,13 +25,13 @@ public class SubsequentLogsForVesselsCreator {
   private final SpeedGenerator speedGenerator;
   private final NewCoordinatesGenerator newCoordinatesGenerator;
 
-  private final SpeedGeneratorConfigVO speedOverGroundCongifVO =
-      new SpeedGeneratorConfigVO(0, 20, 20);
+  private final SpeedGeneratorConfigDTO speedOverGroundCongifVO =
+      new SpeedGeneratorConfigDTO(0, 20, 20);
 
-  private final SpeedGeneratorConfigVO windSpeedConfigVO =
-      new SpeedGeneratorConfigVO(0, 40, 40);
+  private final SpeedGeneratorConfigDTO windSpeedConfigVO =
+      new SpeedGeneratorConfigDTO(0, 40, 40);
 
-  public void execute() {
+  void execute() {
     List<Vessel> vessels = vesselRepository.findAllByLastLogIsNotNull();
 
     Instant currentTimeStamp;

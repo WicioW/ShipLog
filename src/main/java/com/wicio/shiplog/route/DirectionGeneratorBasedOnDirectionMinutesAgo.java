@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class DirectionGeneratorBasedOnDirectionMinutesAgo {
+class DirectionGeneratorBasedOnDirectionMinutesAgo {
 
   private final RandomNumberGenerator randomNumberGenerator;
   private final ClampToRange clampToRange;

@@ -1,6 +1,6 @@
 package com.wicio.shiplog.route;
 
-public record SpeedGeneratorConfigVO(
+record SpeedGeneratorConfigDTO(
     int speedRangeMinValue,
     int speedRangeMaxValue,
     int maximalSpeedChangePerHour

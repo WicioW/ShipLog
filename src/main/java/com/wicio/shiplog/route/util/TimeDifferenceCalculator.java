@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class TimeDifferenceCalculator {
 
-  public long minutesBetween(Instant first, Instant second) {
+  public long minutesBetween(Instant first,
+                             Instant second) {
     long minutes = Math.abs(first.until(second, ChronoUnit.MINUTES));
     log.debug(
         "Calculating minutes between: (" + first + ", " + second + "). Difference:" + minutes);

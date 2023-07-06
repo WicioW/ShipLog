@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class InitialLogsForVesselsCreator {
+class InitialLogsForVesselsCreator {
 
   private final LogCreator logCreator;
   private final VesselRepository vesselRepository;
@@ -26,15 +26,15 @@ public class InitialLogsForVesselsCreator {
   private final DirectionGeneratorBasedOnDirectionMinutesAgo directionGeneratorBasedOnDirectionMinutesAgo;
   private final SpeedGenerator speedGenerator;
 
-  private final SpeedGeneratorConfigVO speedOverGroundCongifVO =
-      new SpeedGeneratorConfigVO(0, 20, 20);
+  private final SpeedGeneratorConfigDTO speedOverGroundCongifVO =
+      new SpeedGeneratorConfigDTO(0, 20, 20);
 
-  private final SpeedGeneratorConfigVO windSpeedConfigVO =
-      new SpeedGeneratorConfigVO(0, 40, 40);
+  private final SpeedGeneratorConfigDTO windSpeedConfigVO =
+      new SpeedGeneratorConfigDTO(0, 40, 40);
 
   private static final Degree startingDirection = new Degree(270);
 
-  public void execute() {
+  void execute() {
     List<Vessel> vessels = vesselRepository.findAllByLastLogIsNull();
     List<Point> points = RouteInitialPoint.pointsList();
 

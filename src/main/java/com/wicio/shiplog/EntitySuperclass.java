@@ -21,7 +21,8 @@ public class EntitySuperclass implements Serializable {
   private Instant created = Instant.now();
 
   public String toLogString() {
-    String simpleName = this.getClass().getSimpleName();
+    String simpleName = this.getClass()
+        .getSimpleName();
     return simpleName + "[id=" + id + "] ";
   }
 }

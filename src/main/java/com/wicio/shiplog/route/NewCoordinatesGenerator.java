@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class NewCoordinatesGenerator {
+class NewCoordinatesGenerator {
 
   private final PointCreator pointCreator;
 
@@ -25,7 +25,7 @@ public class NewCoordinatesGenerator {
    * towards the North, 90 - East, 180 - South, 270 - West. And all between, i.e. 45 is North East.
    * earthRadiusInMetres - Earth radius in metres.
    */
-  public Point basedOnDistanceAndBearing(
+  Point basedOnDistanceAndBearing(
       double latitude,
       double longitude,
       int distanceInMetres,

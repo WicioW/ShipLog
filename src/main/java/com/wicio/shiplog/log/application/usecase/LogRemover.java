@@ -1,3 +1,5 @@
 package com.wicio.shiplog.log.application.usecase;
 
-public class LogRemover {}
+class LogRemover {
+
+}

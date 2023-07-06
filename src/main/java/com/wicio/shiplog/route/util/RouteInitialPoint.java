@@ -17,7 +17,7 @@ public class RouteInitialPoint {
   private static final String COORDINATE_AUSTRALIA = "-25.559998, 112.847445";
   private static final String COORDINATE_SOUTH_AFRICA = "-33.870269, 17.655306";
 
-  public static final List<String> COORDINATES_LIST = List.of(
+  static final List<String> COORDINATES_LIST = List.of(
       COORDINATE_IRELAND,
       COORDINATE_PORTUGAL,
       COORDINATE_CAPE_VERDE,

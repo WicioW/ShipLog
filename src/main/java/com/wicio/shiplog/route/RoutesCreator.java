@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class RoutesCreator {
+class RoutesCreator {
 
   private final InitialLogsForVesselsCreator initialLogsForVesselsCreator;
   private final SubsequentLogsForVesselsCreator subsequentLogsForVesselsCreator;
 
-  public void createRoutesForVessels() {
+  void createRoutesForVessels() {
     initialLogsForVesselsCreator.execute();
     subsequentLogsForVesselsCreator.execute();
   }

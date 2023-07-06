@@ -10,7 +10,7 @@ import org.springframework.util.Assert;
 
 @Component
 @RequiredArgsConstructor
-public class SpeedGenerator {
+class SpeedGenerator {
 
   private final RandomNumberGenerator randomNumberGenerator;
   private final RandomGaussianNumberGenerator randomGaussianNumberGenerator;
@@ -19,8 +19,8 @@ public class SpeedGenerator {
   /**
    * Speed over ground range in km/h
    */
-  public int generateSpeedOverGround(
-      SpeedGeneratorConfigVO speedGeneratorConfigVO,
+  int generateSpeedOverGround(
+      SpeedGeneratorConfigDTO speedGeneratorConfigVO,
       Integer lastSpeedOverGround,
       long minutesAgo
   ) {
@@ -40,7 +40,7 @@ public class SpeedGenerator {
   }
 
   private NumberRangeDTO speedOverGroundRangeForTimeDifference(
-      SpeedGeneratorConfigVO speedGeneratorConfigVO,
+      SpeedGeneratorConfigDTO speedGeneratorConfigVO,
       int lastSpeedOverGround,
       long minutes) {
     int possibleDifferenceRange = getPossibleDifferenceRange(minutes, speedGeneratorConfigVO);
@@ -52,14 +52,14 @@ public class SpeedGenerator {
   }
 
   private int clampToSOGRange(int value,
-                              SpeedGeneratorConfigVO speedGeneratorConfigVO) {
+                              SpeedGeneratorConfigDTO speedGeneratorConfigVO) {
     return clampToRange.clamp(
         value, speedGeneratorConfigVO.speedRangeMinValue(),
         speedGeneratorConfigVO.speedRangeMaxValue());
   }
 
   private int getPossibleDifferenceRange(long minutes,
-                                         SpeedGeneratorConfigVO speedGeneratorConfigVO) {
+                                         SpeedGeneratorConfigDTO speedGeneratorConfigVO) {
     return (int) ((speedGeneratorConfigVO.maximalSpeedChangePerHour() * minutes) / 120);
   }
 }

@@ -12,7 +12,8 @@ public class VesselUpdater {
 
   private final VesselRepository vesselRepository;
 
-  public Vessel updateLastLog(Vessel vessel, Log log) {
+  public Vessel updateLastLog(Vessel vessel,
+                              Log log) {
     vessel.updateLastLog(log);
     return vesselRepository.save(vessel);
   }
