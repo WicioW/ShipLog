@@ -1,4 +1,4 @@
-package com.wicio.shiplog.log.application.usecase;
+package com.wicio.shiplog.log.domain.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

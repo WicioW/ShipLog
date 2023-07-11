@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-class CourseOverGroundTest {
+class DegreeTest {
 
   @Test
   void degreesShouldBeBetweenZeroAndThreeHundredSixty() {

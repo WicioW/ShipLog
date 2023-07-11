@@ -8,7 +8,7 @@ import static java.lang.Math.sin;
 import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 
-import com.wicio.shiplog.log.application.usecase.PointCreator;
+import com.wicio.shiplog.log.domain.services.PointCreator;
 import lombok.AllArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Component;

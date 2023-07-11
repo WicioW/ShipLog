@@ -1,4 +1,4 @@
-package com.wicio.shiplog.log.application.usecase;
+package com.wicio.shiplog.log.domain.services;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;

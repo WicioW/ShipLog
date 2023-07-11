@@ -1,4 +1,4 @@
-package com.wicio.shiplog.vessel.application.usecase;
+package com.wicio.shiplog.vessel.domain.services;
 
 import com.wicio.shiplog.log.domain.Log;
 import com.wicio.shiplog.vessel.domain.Vessel;

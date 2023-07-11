@@ -1,4 +1,4 @@
-package com.wicio.shiplog.vessel.application.usecase;
+package com.wicio.shiplog.vessel.domain.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,7 +32,6 @@ class VesselUpdaterTest {
     when(vesselRepository.save(any(Vessel.class))).thenAnswer(i -> i.getArguments()[0]);
     // when
     Vessel result = testObj.updateLastLog(vessel, log);
-
     // then
     assertThat(result.getLastLog()).isEqualTo(log);
   }

@@ -1,9 +1,9 @@
 package com.wicio.shiplog.route;
 
 import com.wicio.shiplog.log.api.dto.CreateLogRequest;
-import com.wicio.shiplog.log.application.usecase.LogCreator;
 import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.log.domain.Log;
+import com.wicio.shiplog.log.domain.services.LogCreator;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;

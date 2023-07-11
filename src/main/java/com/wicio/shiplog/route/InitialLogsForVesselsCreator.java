@@ -1,8 +1,8 @@
 package com.wicio.shiplog.route;
 
 import com.wicio.shiplog.log.api.dto.CreateLogRequest;
-import com.wicio.shiplog.log.application.usecase.LogCreator;
 import com.wicio.shiplog.log.domain.Degree;
+import com.wicio.shiplog.log.domain.services.LogCreator;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
 import com.wicio.shiplog.route.util.RouteInitialPoint;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
@@ -26,7 +26,7 @@ class InitialLogsForVesselsCreator {
   private final DirectionGeneratorBasedOnDirectionMinutesAgo directionGeneratorBasedOnDirectionMinutesAgo;
   private final SpeedGenerator speedGenerator;
 
-  private final SpeedGeneratorConfigDTO speedOverGroundCongifVO =
+  private final SpeedGeneratorConfigDTO speedGeneratorConfigDTO =
       new SpeedGeneratorConfigDTO(0, 20, 20);
 
   private final SpeedGeneratorConfigDTO windSpeedConfigVO =
@@ -55,7 +55,7 @@ class InitialLogsForVesselsCreator {
       currentTimeStamp = Instant.now();
       lastTimeStamp = currentTimeStamp.minus(10, ChronoUnit.MINUTES);
       speedOverGround = speedGenerator.generateSpeedOverGround(
-          speedOverGroundCongifVO,
+          speedGeneratorConfigDTO,
           0,
           timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp));
       courseOverGround =

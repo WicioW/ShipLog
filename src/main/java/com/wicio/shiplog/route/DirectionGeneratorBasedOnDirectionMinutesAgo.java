@@ -14,7 +14,7 @@ class DirectionGeneratorBasedOnDirectionMinutesAgo {
   private final RandomNumberGenerator randomNumberGenerator;
   private final ClampToRange clampToRange;
 
-  public Degree generateDirection(
+  Degree generateDirection(
       Degree lastDirection,
       long minutesAgo) {
     int returnValue;
@@ -52,7 +52,6 @@ class DirectionGeneratorBasedOnDirectionMinutesAgo {
         new Degree(clampToDegreeRange(maxValueAfterTime)));
   }
 
-  // arbitrary method of calculating turn value over time
   private int possibleVesselTurnValue(long minutesPassed) {
     return (int) (minutesPassed / 2);
   }

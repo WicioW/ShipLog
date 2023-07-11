@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.offset;
 import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.when;
 
-import com.wicio.shiplog.log.application.usecase.PointCreator;
+import com.wicio.shiplog.log.domain.services.PointCreator;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
