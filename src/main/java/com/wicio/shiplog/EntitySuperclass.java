@@ -3,22 +3,21 @@ package com.wicio.shiplog;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import java.io.Serializable;
 import java.time.Instant;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
 
 @Getter
 @MappedSuperclass
-public class EntitySuperclass implements Serializable {
+public abstract class EntitySuperclass {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   @Column(nullable = false)
-  private Instant created = Instant.now();
+  private Instant createdAt = Instant.now();
 
   public String toLogString() {
     String simpleName = this.getClass()

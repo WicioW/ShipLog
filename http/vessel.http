@@ -1,0 +1,8 @@
+### create vessel
+POST http://localhost:8080/vessels
+Content-Type: application/json
+
+{
+  "name": "test_name",
+  "productionDate": 1689034964
+}

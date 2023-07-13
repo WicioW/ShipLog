@@ -4,6 +4,7 @@ import com.wicio.shiplog.EntitySuperclass;
 import com.wicio.shiplog.log.domain.Log;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.time.Instant;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class Vessel extends EntitySuperclass {
   private Instant productionDate;
 
   @OneToOne
+  @JoinColumn(name = "last_log_id", referencedColumnName = "id")
   private Log lastLog;
 
   public void updateLastLog(Log log) {
