@@ -5,12 +5,14 @@ import com.wicio.shiplog.log.api.dto.CreateLogResponse;
 import com.wicio.shiplog.log.api.dto.LogResponse;
 import com.wicio.shiplog.log.application.CreateLogUseCase;
 import com.wicio.shiplog.log.application.GetLogsListUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +32,7 @@ class LogController {
 
   @PostMapping("/{vesselId}")
   CreateLogResponse createLog(@PathVariable("vesselId") Long vesselId,
-                              CreateLogRequest createLogRequest) {
+                              @RequestBody @Valid CreateLogRequest createLogRequest) {
     return createLogUseCase.createLog(vesselId, createLogRequest);
   }
 }

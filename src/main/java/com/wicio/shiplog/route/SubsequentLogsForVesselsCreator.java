@@ -44,7 +44,7 @@ class SubsequentLogsForVesselsCreator {
     for (Vessel vessel : vessels) {
       currentTimeStamp = Instant.now();
       Log lastLog = vessel.getLastLog();
-      lastTimeStamp = lastLog.getCreated();
+      lastTimeStamp = lastLog.getCreatedAt();
       speedOverGround = speedGenerator.generateSpeedOverGround(
           speedOverGroundCongifVO,
           lastLog.getSpeedOverGroundInKmPerHour(),
