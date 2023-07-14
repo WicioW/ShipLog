@@ -1,3 +1,5 @@
+[![coverage](https://raw.githubusercontent.com/WicioW/ShipLog/badges/jacoco.svg)](https://github.com/WicioW/ShipLog/actions/workflows/github-ci.yml)
+
 # ShipLog
 ShipLog is a small backend application that collects data from marine vessels and displays them for users. The project consists of two distinct parts:
 
