@@ -1,5 +1,6 @@
 package com.wicio.shiplog.vessel.api;
 
+import static com.wicio.shiplog.util.ControllerJsonUtil.toJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.ArgumentMatchers.eq;
@@ -10,10 +11,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.wicio.shiplog.config.SecurityConfig;
 import com.wicio.shiplog.vessel.api.dto.CreateVesselRequest;
 import com.wicio.shiplog.vessel.api.dto.CreateVesselResponse;
@@ -89,14 +86,21 @@ class VesselControllerTest {
         }));
   }
 
-  private String toJsonString(CreateVesselRequest createVesselRequest)
-      throws JsonProcessingException {
-    return objectMapper().writeValueAsString(createVesselRequest);
+  @Test
+  void shouldReturnBadRequest_whenCreateVesselHasNullName() throws Exception {
+    //given
+    CreateVesselRequest createVesselRequest = CreateVesselRequest.builder()
+        .build();
+
+    when(createVesselUseCase.createVessel(eq(createVesselRequest))).thenReturn(
+        CreateVesselResponse.builder()
+            .id(652L)
+            .build());
+    //when-then
+    mockMvc.perform(post("/vessels")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(toJsonString(createVesselRequest)))
+        .andExpect(status().isBadRequest());
   }
 
-  private ObjectMapper objectMapper() {
-    return JsonMapper.builder()
-        .addModule(new JavaTimeModule())
-        .build();
-  }
 }

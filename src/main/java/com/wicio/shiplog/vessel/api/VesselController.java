@@ -5,6 +5,7 @@ import com.wicio.shiplog.vessel.api.dto.CreateVesselResponse;
 import com.wicio.shiplog.vessel.api.dto.VesselResponse;
 import com.wicio.shiplog.vessel.application.CreateVesselUseCase;
 import com.wicio.shiplog.vessel.application.GetVesselUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ class VesselController {
   }
 
   @PostMapping
-  CreateVesselResponse createVessel(@RequestBody CreateVesselRequest createVesselRequest) {
+  CreateVesselResponse createVessel(@RequestBody @Valid CreateVesselRequest createVesselRequest) {
     return createVesselUseCase.createVessel(createVesselRequest);
   }
 
