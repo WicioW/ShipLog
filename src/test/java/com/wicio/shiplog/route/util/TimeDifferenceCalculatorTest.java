@@ -27,12 +27,13 @@ class TimeDifferenceCalculatorTest {
   }
 
   private static Stream<Arguments> provideTestValues() {
+    Instant instant = Instant.now();
     return Stream.of(
-        Arguments.of(10, Instant.now(), Instant.now()
+        Arguments.of(10, instant, instant
             .plusSeconds(600)),
-        Arguments.of(10, Instant.now(), Instant.now()
+        Arguments.of(10, instant, instant
             .minusSeconds(600)),
-        Arguments.of(0, Instant.now(), Instant.now()),
+        Arguments.of(0, instant, instant),
         Arguments.of(24 * 60,
             Instant.parse("2021-08-02T00:00:00Z"),
             Instant.parse("2021-08-01T00:00:00Z"))
