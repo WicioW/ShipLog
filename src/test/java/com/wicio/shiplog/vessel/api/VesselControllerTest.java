@@ -1,5 +1,6 @@
 package com.wicio.shiplog.vessel.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.assertArg;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -63,7 +64,7 @@ class VesselControllerTest {
   }
 
   @Test
-  void testCreateLog() throws Exception {
+  void testCreateVessel() throws Exception {
     //given
     CreateVesselRequest createVesselRequest = CreateVesselRequest.builder()
         .name("test")
