@@ -2,14 +2,15 @@ package com.wicio.shiplog.route;
 
 import com.wicio.shiplog.log.api.dto.CreateLogRequest;
 import com.wicio.shiplog.log.domain.Degree;
-import com.wicio.shiplog.log.domain.services.LogCreator;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
 import com.wicio.shiplog.route.util.RouteInitialPoint;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
+import com.wicio.shiplog.route.util.dto.NewVesselLogDTO;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class InitialLogsForVesselsCreator {
 
-  private final LogCreator logCreator;
   private final VesselRepository vesselRepository;
   private final TimeDifferenceCalculator timeDifferenceCalculator;
   private final RandomNumberGenerator randomNumberGenerator;
@@ -34,8 +34,11 @@ class InitialLogsForVesselsCreator {
 
   private static final Degree startingDirection = new Degree(270);
 
-  void execute() {
+  List<NewVesselLogDTO> execute() {
     List<Vessel> vessels = vesselRepository.findAllByLastLogIsNull();
+    if(vessels.isEmpty()) {
+      return List.of();
+    }
     List<Point> points = RouteInitialPoint.pointsList();
 
     int pointsListSize = points.size();
@@ -49,6 +52,7 @@ class InitialLogsForVesselsCreator {
     int windSpeed;
 
     int indexOfPointsList = 0;
+    ArrayList<NewVesselLogDTO> list = new ArrayList<>();
     for (Vessel vessel : vessels) {
       Point point = points.get(indexOfPointsList % pointsListSize);
 
@@ -72,9 +76,8 @@ class InitialLogsForVesselsCreator {
           20,
           timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp));
 
-      //TODO
-      logCreator.apply(
-          vessel,
+      list.add(new NewVesselLogDTO(
+          vessel.getId(),
           CreateLogRequest.builder()
               .YCoordinate(point.getY())
               .XCoordinate(point.getX())
@@ -83,11 +86,11 @@ class InitialLogsForVesselsCreator {
               .windDirection(windDirection.getValue())
               .windSpeed(windSpeed)
               .stationary(false)
-              .build());
-
-
+              .build()
+      ));
       indexOfPointsList++;
     }
+    return list;
   }
 
 }

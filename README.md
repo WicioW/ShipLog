@@ -12,10 +12,11 @@ Maven
 Docker  
 
 ## Installation
-Start the database by running the following command in the project directory:
+Start the database and kafka by running the following commands in the project directory:
 
 ```commandline
-docker-compose up -d
+db-docker-compose up -d
+kafka-docker-compose up -d
 ```
 Start the Spring application from your IDE. Please note that this setup is for development purposes only, as there is no live environment available.
 
