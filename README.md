@@ -1,9 +1,9 @@
 # ShipLog
 ShipLog is a small backend application that collects data from marine vessels and displays them for users. The project consists of two distinct parts:
 
-1. CRUD API: The CRUD API provides two controllers for managing vessels and logs. A log entity contains ship data at a specific timestamp.
+1. Fake Data Generation Algorithm(`route` package): As real data from vessels is not currently collected, this algorithm generates fake data for vessels in the database.
+2. CRUD API(rest of the packages): The CRUD API provides two controllers for managing vessels and logs. A log entity contains ship data at a specific timestamp.
 
-2. Fake Data Generation Algorithm: As real data from vessels is not currently collected, this algorithm generates fake data for vessels in the database.
 
 ## Prerequisites
 Java 20  
@@ -44,3 +44,10 @@ There are currently no guidelines for contributing to the project. Feel free to 
 This project is currently not licensed.
 
 Feel free to modify the generated README file as needed to align with your project's specific requirements and preferences.
+
+## Hot to improve this project in the future
+
+- Add Swagger documentation
+- Divide the project into microservices. `route` package should be a separate service.
+- Add a frontend application to display the data.
+- Add authentication and authorization.

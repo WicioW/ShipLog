@@ -72,6 +72,7 @@ class InitialLogsForVesselsCreator {
           20,
           timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp));
 
+      //TODO
       logCreator.apply(
           vessel,
           CreateLogRequest.builder()
@@ -83,6 +84,7 @@ class InitialLogsForVesselsCreator {
               .windSpeed(windSpeed)
               .stationary(false)
               .build());
+
 
       indexOfPointsList++;
     }

@@ -74,6 +74,7 @@ class SubsequentLogsForVesselsCreator {
           courseOverGround.getValue()
       );
 
+      //TODO
       logCreator.apply(
           vessel,
           CreateLogRequest.builder()
