@@ -9,5 +9,4 @@ public class ShipLogApplication {
   public static void main(String[] args) {
     SpringApplication.run(ShipLogApplication.class, args);
   }
-
 }

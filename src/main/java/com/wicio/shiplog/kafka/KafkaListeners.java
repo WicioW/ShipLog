@@ -1,7 +1,6 @@
 package com.wicio.shiplog.kafka;
 
 import com.wicio.shiplog.log.domain.services.LogCreator;
-import com.wicio.shiplog.route.util.dto.NewVesselLogDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -18,8 +17,8 @@ public class KafkaListeners {
     System.out.println("Received: " + data);
 
     //TODO
-    NewVesselLogDTO newVesselLogDTO = new NewVesselLogDTO();
-    logCreator.createLog(newVesselLogDTO.vesselId(),
-        newVesselLogDTO.createLogRequest());
+//    NewVesselLogDTO newVesselLogDTO = new NewVesselLogDTO();
+//    logCreator.createLog(newVesselLogDTO.vesselId(),
+//        newVesselLogDTO.createLogRequest());
   }
 }

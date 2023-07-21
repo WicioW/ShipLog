@@ -4,7 +4,7 @@ import com.wicio.shiplog.log.api.dto.CreateLogRequest;
 import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.log.domain.Log;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
-import com.wicio.shiplog.route.util.dto.NewVesselLogDTO;
+import com.wicio.shiplog.route.producer.NewVesselLogEvent;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;
 import java.time.Instant;
@@ -31,7 +31,7 @@ class SubsequentLogsForVesselsCreator {
   private final SpeedGeneratorConfigDTO windSpeedConfigVO =
       new SpeedGeneratorConfigDTO(0, 40, 40);
 
-  List<NewVesselLogDTO>  execute() {
+  List<NewVesselLogEvent>  execute() {
     List<Vessel> vessels = vesselRepository.findAllByLastLogIsNotNull();
 
     Instant currentTimeStamp;
@@ -41,7 +41,7 @@ class SubsequentLogsForVesselsCreator {
     Degree windDirection;
     int windSpeed;
 
-    ArrayList<NewVesselLogDTO> list = new ArrayList<>();
+    ArrayList<NewVesselLogEvent> list = new ArrayList<>();
 
     for (Vessel vessel : vessels) {
       currentTimeStamp = Instant.now();
@@ -76,7 +76,7 @@ class SubsequentLogsForVesselsCreator {
           courseOverGround.getValue()
       );
 
-      list.add(new NewVesselLogDTO(
+      list.add(new NewVesselLogEvent(
           vessel.getId(),
           CreateLogRequest.builder()
               .YCoordinate(point.getY())

@@ -5,7 +5,7 @@ import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.route.util.RandomNumberGenerator;
 import com.wicio.shiplog.route.util.RouteInitialPoint;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
-import com.wicio.shiplog.route.util.dto.NewVesselLogDTO;
+import com.wicio.shiplog.route.producer.NewVesselLogEvent;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;
 import java.time.Instant;
@@ -34,7 +34,7 @@ class InitialLogsForVesselsCreator {
 
   private static final Degree startingDirection = new Degree(270);
 
-  List<NewVesselLogDTO> execute() {
+  List<NewVesselLogEvent> execute() {
     List<Vessel> vessels = vesselRepository.findAllByLastLogIsNull();
     if(vessels.isEmpty()) {
       return List.of();
@@ -52,7 +52,7 @@ class InitialLogsForVesselsCreator {
     int windSpeed;
 
     int indexOfPointsList = 0;
-    ArrayList<NewVesselLogDTO> list = new ArrayList<>();
+    ArrayList<NewVesselLogEvent> list = new ArrayList<>();
     for (Vessel vessel : vessels) {
       Point point = points.get(indexOfPointsList % pointsListSize);
 
@@ -76,7 +76,7 @@ class InitialLogsForVesselsCreator {
           20,
           timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp));
 
-      list.add(new NewVesselLogDTO(
+      list.add(new NewVesselLogEvent(
           vessel.getId(),
           CreateLogRequest.builder()
               .YCoordinate(point.getY())
