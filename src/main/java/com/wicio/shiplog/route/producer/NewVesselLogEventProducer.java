@@ -6,16 +6,20 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
+import static com.wicio.shiplog.kafka.KafkaTopicName.VESSEL_LOG;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class NewVesselLogEventProducer {
 
+  private final KafkaTemplate<String, NewVesselLogEvent> kafkaTemplate;
 
-  private final KafkaTemplate<String, String> kafkaTemplate;
-
-  public void produceEvents(List<NewVesselLogEvent> logs) {
-    logs.forEach(log -> kafkaTemplate.send("vessel-log", log.toString()));
+  public void produceEvents(List<NewVesselLogEvent> events) {
+    events.forEach(event -> {
+      log.info("Sending: " + event);
+      kafkaTemplate.send(VESSEL_LOG, event);
+    });
   }
 
 }

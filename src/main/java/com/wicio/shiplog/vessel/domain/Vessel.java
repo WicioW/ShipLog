@@ -7,13 +7,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.time.Instant;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
 @Builder
 @Getter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Vessel extends EntitySuperclass {
 
   @Column(nullable = false)

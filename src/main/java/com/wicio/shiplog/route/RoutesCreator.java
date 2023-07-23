@@ -4,6 +4,7 @@ import com.wicio.shiplog.route.producer.NewVesselLogEvent;
 import com.wicio.shiplog.route.producer.NewVesselLogEventProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -17,7 +18,9 @@ class RoutesCreator {
   private final SubsequentLogsForVesselsCreator subsequentLogsForVesselsCreator;
 
   //TODO scheduler
-  void createRoutesForVessels() {
+  @Scheduled(fixedRate = 10000)
+ public void createRoutesForVessels() {
+    log.info("Creating routes for vessels");
     List<NewVesselLogEvent> logs = initialLogsForVesselsCreator.execute();
     if (logs.isEmpty()) {
       logs = subsequentLogsForVesselsCreator.execute();
