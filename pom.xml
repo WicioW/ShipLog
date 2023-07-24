@@ -71,13 +71,11 @@
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
-<!--    //TODO-->
-<!--    <dependency>-->
-<!--      <groupId>org.flywaydb</groupId>-->
-<!--      <artifactId>flyway-core</artifactId>-->
-<!--      <version>9.8.1</version>-->
-<!--    </dependency>-->
-
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>9.8.1</version>
+    </dependency>
 <!--    TEST-->
     <dependency>
       <groupId>org.springframework.boot</groupId>

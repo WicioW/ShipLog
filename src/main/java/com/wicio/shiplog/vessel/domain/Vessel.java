@@ -26,7 +26,7 @@ public class Vessel extends EntitySuperclass {
   private Instant productionDate;
 
   @OneToOne
-  @JoinColumn(name = "last_log_id", referencedColumnName = "id")
+  @JoinColumn(name = "last_log_id")
   private Log lastLog;
 
   public void updateLastLog(Log log) {

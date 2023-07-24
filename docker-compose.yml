@@ -46,3 +46,18 @@ services:
       KAFKA_BROKERCONNECT: "kafka:29092"
     depends_on:
       - "kafka"
+
+  postgres:
+    container_name: postgres_shiplog
+    image: postgis/postgis:11-3.3-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: shiplog_user
+      POSTGRES_PASSWORD: shiplog_password
+      POSTGRES_DB: shiplog_db
+    volumes:
+      - shiplog_db_volume:/var/lib/postgresql
+
+volumes:
+  shiplog_db_volume:
