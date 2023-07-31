@@ -2,20 +2,17 @@ package com.wicio.shiplog.log.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.wicio.shiplog.EnableTestcontainers;
+import com.wicio.shiplog.TestContainers;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;
 import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-@SpringBootTest
-@EnableTestcontainers
-class LogRepositoryTest {
+class LogRepositoryTest extends TestContainers {
 
   @Autowired
   private LogRepository testObj;
