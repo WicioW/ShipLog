@@ -32,6 +32,13 @@ public class Vessel extends EntitySuperclass {
   public void updateLastLog(Log log) {
     Assert.notNull(log, "Log cannot be null");
     Assert.isTrue(log.getVessel() == this, "Log must be for this vessel");
+//    if (this.lastLog != null) {
+//      this.lastLog.setVessel(null);
+//    }
     this.lastLog = log;
+  }
+
+  public void deleteLastLog() {
+    this.lastLog = null;
   }
 }
