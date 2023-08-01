@@ -19,12 +19,14 @@ public class RoutesCreator {
 
   @Scheduled(fixedRate = 10000)
   public void createRoutesForVessels() {
-    log.info("Creating routes for vessels");
     List<NewVesselLogEvent> logs = initialLogsForVesselsCreator.execute();
     if (logs.isEmpty()) {
       logs = subsequentLogsForVesselsCreator.execute();
     }
-
+    if (logs.isEmpty()) {
+      return;
+    }
+    log.info("Creating routes for vessels");
     newVesselLogEventProducer.produceEvents(logs);
   }
 

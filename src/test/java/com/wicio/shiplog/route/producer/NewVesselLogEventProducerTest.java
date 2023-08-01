@@ -19,11 +19,13 @@ class NewVesselLogEventProducerTest extends TestContainers {
   EasyRandom easyRandom = new EasyRandom();
 
   @Autowired
-  private NewVesselLogEventProducer kafkaProducer;
-
-  @Autowired
   private NewVesselLogEventListener kafkaConsumer;
 
+//  @Autowired
+//  private KafkaTemplate<String, NewVesselLogEvent> kafkaTemplate;
+
+  @Autowired
+  private NewVesselLogEventProducer kafkaProducer;
   @MockBean
   private LogCreator logCreator;
 
@@ -33,13 +35,48 @@ class NewVesselLogEventProducerTest extends TestContainers {
     NewVesselLogEvent newVesselLogEvent = easyRandom.nextObject(NewVesselLogEvent.class);
     //when
     kafkaProducer.produceEvents(List.of(newVesselLogEvent));
+//    kafkaTemplate.send(VESSEL_LOG, newVesselLogEvent);
     //then
-    verify(logCreator, timeout(10000)).apply(
-        (Long) assertArg(vesselId -> {
-          assertThat(vesselId).isEqualTo(newVesselLogEvent.vesselId());
-        }),
-        assertArg(createLogRequest -> {
-          assertThat(createLogRequest).isEqualTo(newVesselLogEvent.createLogRequest());
-        }));
+    System.out.println("TEST1");
+
+//    await().pollInterval(Duration.ofSeconds(1))
+//        .atMost(Duration.ofSeconds(10))
+//        .untilAsserted(() -> {
+////      System.out.println("ELO2");
+//
+////          verify(kafkaConsumer).newVesselLogListener(any());
+//
+//          verify(logCreator, timeout(100_000))
+//              .apply(
+//                  (Long) assertArg(vesselId -> {
+//                    assertThat(vesselId).isEqualTo(newVesselLogEvent.vesselId());
+//                  }),
+//                  assertArg(createLogRequest -> {
+//                    assertThat(createLogRequest).isEqualTo(newVesselLogEvent.createLogRequest());
+//                  }));
+//        });
+
+//    await().untilAsserted(() -> {
+//      System.out.println("ELO2");
+//      verify(logCreator, timeout(100_000))
+//          .apply(
+//              (Long) assertArg(vesselId -> {
+//                assertThat(vesselId).isEqualTo(newVesselLogEvent.vesselId());
+//              }),
+//              assertArg(createLogRequest -> {
+//                assertThat(createLogRequest).isEqualTo(newVesselLogEvent.createLogRequest());
+//              }));
+//    });
+//
+
+    verify(logCreator, timeout(1_000))
+        .apply(
+            (Long) assertArg(vesselId -> {
+              assertThat(vesselId).isEqualTo(newVesselLogEvent.vesselId());
+            }),
+            assertArg(createLogRequest -> {
+              assertThat(createLogRequest).isEqualTo(newVesselLogEvent.createLogRequest());
+            }));
+    System.out.println("TEST4");
   }
 }
