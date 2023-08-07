@@ -18,10 +18,7 @@ public class NewVesselLogEventListener {
   private final LogCreator logCreator;
 
   @Transactional
-  @KafkaListener(topics = VESSEL_LOG, groupId = "vessel-log-group"
-//      ,
-//      containerFactory = "listenerFactory999"
-  )
+  @KafkaListener(topics = VESSEL_LOG, groupId = "vessel-log-group")
   public void newVesselLogListener(NewVesselLogEvent newVesselLogEvent) {
     log.info("Received: " + newVesselLogEvent);
     logCreator.apply(newVesselLogEvent.vesselId(),
