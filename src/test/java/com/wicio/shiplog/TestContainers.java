@@ -1,6 +1,7 @@
 package com.wicio.shiplog;
 
 import com.wicio.shiplog.TestContainers.TestcontainersInitializer;
+import com.wicio.shiplog.route.RoutesCreator;
 import com.wicio.shiplog.tmp.DbFiller;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,6 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.lifecycle.Startables;
 import org.testcontainers.utility.DockerImageName;
@@ -19,18 +21,14 @@ import org.testcontainers.utility.DockerImageName;
 @ContextConfiguration(initializers = TestcontainersInitializer.class)
 public class TestContainers {
 
-//  @Container
-//  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.1"));
-//
-//  @Container
-//  static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"));
-
   static DockerImageName postgresImage = DockerImageName.parse("postgis/postgis:11-3.3-alpine")
       .asCompatibleSubstituteFor("postgres");
 
+  @Container
   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
       postgresImage);
 
+  @Container
   static KafkaContainer kafka = new KafkaContainer(
       DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
@@ -44,8 +42,8 @@ public class TestContainers {
   @MockBean
   private DbFiller dbFiller;
 
-//  @MockBean
-//  private RoutesCreator routesCreator;
+  @MockBean
+  private RoutesCreator routesCreator;
 
 //  @DynamicPropertySource
 //  static void kafkaProperties(DynamicPropertyRegistry registry) {

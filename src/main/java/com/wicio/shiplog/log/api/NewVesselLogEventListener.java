@@ -18,9 +18,11 @@ public class NewVesselLogEventListener {
   private final LogCreator logCreator;
 
   @Transactional
-  @KafkaListener(topics = VESSEL_LOG, groupId = "vessel-log-group", containerFactory = "listenerFactory")
+  @KafkaListener(topics = VESSEL_LOG, groupId = "vessel-log-group"
+//      ,
+//      containerFactory = "listenerFactory999"
+  )
   public void newVesselLogListener(NewVesselLogEvent newVesselLogEvent) {
-    System.out.println("TEST3");
     log.info("Received: " + newVesselLogEvent);
     logCreator.apply(newVesselLogEvent.vesselId(),
         newVesselLogEvent.createLogRequest());
