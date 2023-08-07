@@ -16,12 +16,10 @@ public class NewVesselLogEventProducer {
   private final KafkaTemplate<String, NewVesselLogEvent> kafkaTemplate;
 
   public void produceEvents(List<NewVesselLogEvent> events) {
-//    events.forEach(event -> {
-//      log.info("Sending: " + event); //TODO steping over this line makes test pass
-//      kafkaTemplate.send(VESSEL_LOG, event);
-//    });
-
-    kafkaTemplate.send(VESSEL_LOG, events.get(0));
+    events.forEach(event -> {
+      log.info("Sending: " + event);
+      kafkaTemplate.send(VESSEL_LOG, event);
+    });
   }
 
 }

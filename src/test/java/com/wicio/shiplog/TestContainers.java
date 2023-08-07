@@ -37,23 +37,12 @@ public class TestContainers {
         .join();
   }
 
-
   //so that the DB won't be filled during tests
   @MockBean
   private DbFiller dbFiller;
 
   @MockBean
   private RoutesCreator routesCreator;
-
-//  @DynamicPropertySource
-//  static void kafkaProperties(DynamicPropertyRegistry registry) {
-//    registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
-//    registry.add("spring.datasource.url", () -> "jdbc:h2:mem:test");
-//    registry.add("spring.datasource.driverClassName", () -> "org.h2.Driver");
-//    registry.add("spring.datasource.username", () -> "root");
-//    registry.add("spring.datasource.password", () -> "secret");
-//    registry.add("spring.flyway.enabled", () -> "false");
-//  }
 
   static class TestcontainersInitializer implements
       ApplicationContextInitializer<ConfigurableApplicationContext> {

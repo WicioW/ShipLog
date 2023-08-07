@@ -7,41 +7,19 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 import com.wicio.shiplog.TestContainers;
-import com.wicio.shiplog.log.api.NewVesselLogEventListener;
 import com.wicio.shiplog.log.api.dto.CreateLogRequest;
 import com.wicio.shiplog.log.domain.services.LogCreator;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.kafka.core.KafkaTemplate;
 
-//@TestPropertySource(
-//    properties = {
-//        "spring.kafka.consumer.auto-offset-reset=earliest"
-////        ,
-////        "spring.datasource.url=jdbc:tc:mysql:8.0.32:///db",
-//    }
-//)
-@TestInstance(Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class NewVesselLogEventProducerTest extends TestContainers {
 
   EasyRandom easyRandom = new EasyRandom();
-
-  @Autowired
-  private NewVesselLogEventListener kafkaConsumer;
-
-  @Autowired
-  private KafkaTemplate<String, NewVesselLogEvent> kafkaTemplate;
 
   @Autowired
   private NewVesselLogEventProducer kafkaProducer;
@@ -49,9 +27,6 @@ class NewVesselLogEventProducerTest extends TestContainers {
   private LogCreator logCreator;
 
   @Test
-  @Order(3)
-//  @Disabled
-//  @RepeatedTest(2)
   void testProduceEventsConsumesMessages() throws ExecutionException, InterruptedException {
     //given
     NewVesselLogEvent newVesselLogEvent = new NewVesselLogEvent(491L, easyRandom.nextObject(
@@ -60,7 +35,6 @@ class NewVesselLogEventProducerTest extends TestContainers {
     kafkaProducer.produceEvents(List.of(newVesselLogEvent));
 //    kafkaTemplate.send(VESSEL_LOG, newVesselLogEvent);
     //then
-    System.out.println("TEST1");
 
 //    CompletableFuture<SendResult<String, NewVesselLogEvent>> future =
 //        kafkaTemplate.send("vessel-log", newVesselLogEvent);
@@ -83,13 +57,9 @@ class NewVesselLogEventProducerTest extends TestContainers {
             assertArg(createLogRequest -> {
               assertThat(createLogRequest).isEqualTo(newVesselLogEvent.createLogRequest());
             }));
-    System.out.println("TEST4");
   }
 
   @Test
-  @Order(2)
-//  @Disabled
-//  @RepeatedTest(2)
   void testProduceEventsConsumesMessages2() {
     //given
     NewVesselLogEvent newVesselLogEvent = new NewVesselLogEvent(375L, easyRandom.nextObject(
@@ -98,7 +68,6 @@ class NewVesselLogEventProducerTest extends TestContainers {
     kafkaProducer.produceEvents(List.of(newVesselLogEvent));
 //    kafkaTemplate.send(VESSEL_LOG, newVesselLogEvent);
     //then
-    System.out.println("TEST1");
 
 //    await()
 //        .pollInterval(Duration.ofSeconds(1))
@@ -139,12 +108,9 @@ class NewVesselLogEventProducerTest extends TestContainers {
             assertArg(createLogRequest -> {
               assertThat(createLogRequest).isEqualTo(newVesselLogEvent.createLogRequest());
             }));
-    System.out.println("TEST4");
   }
 
   @Test
-  @Order(1)
-//  @Disabled
   void testProduceEventsConsumesMessages3() {
     //given
     NewVesselLogEvent newVesselLogEvent = new NewVesselLogEvent(1L, easyRandom.nextObject(
@@ -153,7 +119,6 @@ class NewVesselLogEventProducerTest extends TestContainers {
     kafkaProducer.produceEvents(List.of(newVesselLogEvent));
 //    kafkaTemplate.send(VESSEL_LOG, newVesselLogEvent);
     //then
-    System.out.println("TEST1");
 
     await()
         .pollInterval(Duration.ofSeconds(1))
@@ -173,6 +138,5 @@ class NewVesselLogEventProducerTest extends TestContainers {
                   }));
         });
 
-    System.out.println("TEST4");
   }
 }
