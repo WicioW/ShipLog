@@ -21,6 +21,11 @@ class LogRepositoryTest extends TestContainers {
 
   @BeforeEach
   void clear() {
+    vesselRepository.findAll()
+        .forEach(v -> {
+          v.deleteLastLog();
+          vesselRepository.save(v);
+        });
     testObj.deleteAll();
     vesselRepository.deleteAll();
   }
