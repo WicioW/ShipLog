@@ -7,6 +7,7 @@ import com.wicio.shiplog.route.producer.NewVesselLogEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public class NewVesselLogEventListener {
 
   @Transactional
   @KafkaListener(topics = VESSEL_LOG, groupId = "vessel-log-group")
-  public void newVesselLogListener(NewVesselLogEvent newVesselLogEvent) {
+  public void handleNewVesselLogEvent(@Payload NewVesselLogEvent newVesselLogEvent) {
     log.info("Received: " + newVesselLogEvent);
     logCreator.apply(newVesselLogEvent.vesselId(),
         newVesselLogEvent.createLogRequest());
