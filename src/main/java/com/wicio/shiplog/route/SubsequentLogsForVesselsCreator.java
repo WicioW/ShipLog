@@ -3,11 +3,12 @@ package com.wicio.shiplog.route;
 import com.wicio.shiplog.log.api.dto.CreateLogRequest;
 import com.wicio.shiplog.log.domain.Degree;
 import com.wicio.shiplog.log.domain.Log;
-import com.wicio.shiplog.log.domain.services.LogCreator;
 import com.wicio.shiplog.route.util.TimeDifferenceCalculator;
+import com.wicio.shiplog.route.producer.NewVesselLogEvent;
 import com.wicio.shiplog.vessel.domain.Vessel;
 import com.wicio.shiplog.vessel.domain.VesselRepository;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class SubsequentLogsForVesselsCreator {
 
-  private final LogCreator logCreator;
   private final VesselRepository vesselRepository;
   private final TimeDifferenceCalculator timeDifferenceCalculator;
   private final DistanceCalculatorBasedOnSpeedAndTime distanceCalculatorBasedOnSpeedAndTime;
@@ -25,13 +25,13 @@ class SubsequentLogsForVesselsCreator {
   private final SpeedGenerator speedGenerator;
   private final NewCoordinatesGenerator newCoordinatesGenerator;
 
-  private final SpeedGeneratorConfigDTO speedOverGroundCongifVO =
+  private final SpeedGeneratorConfigDTO speedOverGroundConfigVO =
       new SpeedGeneratorConfigDTO(0, 20, 20);
 
   private final SpeedGeneratorConfigDTO windSpeedConfigVO =
       new SpeedGeneratorConfigDTO(0, 40, 40);
 
-  void execute() {
+  List<NewVesselLogEvent>  execute() {
     List<Vessel> vessels = vesselRepository.findAllByLastLogIsNotNull();
 
     Instant currentTimeStamp;
@@ -41,12 +41,14 @@ class SubsequentLogsForVesselsCreator {
     Degree windDirection;
     int windSpeed;
 
+    ArrayList<NewVesselLogEvent> list = new ArrayList<>();
+
     for (Vessel vessel : vessels) {
       currentTimeStamp = Instant.now();
       Log lastLog = vessel.getLastLog();
       lastTimeStamp = lastLog.getCreatedAt();
       speedOverGround = speedGenerator.generateSpeedOverGround(
-          speedOverGroundCongifVO,
+          speedOverGroundConfigVO,
           lastLog.getSpeedOverGroundInKmPerHour(),
           timeDifferenceCalculator.minutesBetween(currentTimeStamp, lastTimeStamp));
       courseOverGround =
@@ -74,8 +76,8 @@ class SubsequentLogsForVesselsCreator {
           courseOverGround.getValue()
       );
 
-      logCreator.apply(
-          vessel,
+      list.add(new NewVesselLogEvent(
+          vessel.getId(),
           CreateLogRequest.builder()
               .YCoordinate(point.getY())
               .XCoordinate(point.getX())
@@ -85,7 +87,9 @@ class SubsequentLogsForVesselsCreator {
               .windSpeed(windSpeed)
               .stationary(speedOverGround == 0)
               .build()
-      );
+      ));
     }
+    return list;
   }
+
 }

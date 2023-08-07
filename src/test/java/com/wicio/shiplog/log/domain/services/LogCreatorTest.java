@@ -79,7 +79,7 @@ class LogCreatorTest {
         .build();
     Long vesselId = 348L;
     Point point = generateRandomPoint();
-    when(vesselFinder.referenceById(vesselId))
+    when(vesselFinder.byId(vesselId))
         .thenReturn(vessel);
     when(pointCreator.apply(createLogRequest.XCoordinate(), createLogRequest.YCoordinate()))
         .thenReturn(point);

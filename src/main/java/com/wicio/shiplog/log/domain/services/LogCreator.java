@@ -22,7 +22,7 @@ public class LogCreator {
 
   public Log apply(Long vesselId,
                    CreateLogRequest createLogRequest) {
-    return getLog(vesselFinder.referenceById(vesselId), createLogRequest);
+    return getLog(vesselFinder.byId(vesselId), createLogRequest);
   }
 
   public Log apply(Vessel vessel,

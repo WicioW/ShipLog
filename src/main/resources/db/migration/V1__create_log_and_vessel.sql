@@ -1,7 +1,6 @@
 create table log
 (
-  id                               bigint    not null
-    primary key,
+  id                               serial primary key,
   created_at                       timestamp not null,
   course_over_ground               integer,
   is_stationary                    boolean   not null,
@@ -14,17 +13,18 @@ create table log
 
 create table vessel
 (
-  id              bigint       not null
-    primary key,
+  id              serial primary key,
   created_at      timestamp    not null,
   name            varchar(255) not null,
   production_date timestamp,
   last_log_id     bigint
-    constraint fkqvatccs6k6nit01rt6lujkr41
-      references log
 );
 
 alter table log
-  add constraint fkq7rhr9gpfphxuuctspy0mku45
+  add constraint fk_log_vessel
     foreign key (vessel_id) references vessel;
+
+alter table vessel
+  add constraint fk_veseel_last_log
+    foreign key (last_log_id) references log;
 

@@ -9,14 +9,20 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.locationtech.jts.geom.Point;
 import org.springframework.lang.Nullable;
 
 @Getter
 @Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
 public class Log extends EntitySuperclass {
 
   @ManyToOne(optional = false)
@@ -46,4 +52,6 @@ public class Log extends EntitySuperclass {
   private Integer windSpeedInKmPerHour;
   @Builder.Default
   private boolean isStationary = true;
+
+
 }
