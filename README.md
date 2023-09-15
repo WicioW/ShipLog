@@ -48,7 +48,7 @@ This project is currently not licensed.
 Feel free to modify the generated README file as needed to align with your project's specific requirements and preferences.
 
 ## Hot to improve this project in the future
-
+- Add SOS functionality. One ship can send an SOS signal, and all ships within some distance will get this signal with gps location of troubled vessel.
 - Add Swagger documentation
 - Divide the project into microservices. `route` package should be a separate service.
 - Add a frontend application to display the data.
